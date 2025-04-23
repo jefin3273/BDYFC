@@ -54,7 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .eq("user_id", session.user.id)
           .single();
 
-        setUserRole(roleData?.user_roles?.name || null);
+        // Fix the TypeScript error by properly accessing the nested object
+        setUserRole(roleData?.user_roles?.[0]?.name || null);
       }
 
       setIsLoading(false);
@@ -75,7 +76,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             .eq("user_id", session.user.id)
             .single();
 
-          setUserRole(roleData?.user_roles?.name || null);
+          // Fix the TypeScript error by properly accessing the nested object
+          setUserRole(roleData?.user_roles?.[0]?.name || null);
         } else {
           setUserRole(null);
         }

@@ -25,7 +25,8 @@ export default async function AdminLayout({
     .eq("user_id", session.user.id)
     .single();
 
-  const userRole = roleData?.user_roles?.name;
+  // Fix the TypeScript error by properly accessing the nested object
+  const userRole = roleData?.user_roles?.[0]?.name || null;
 
   if (!userRole || !["admin", "moderator", "editor"].includes(userRole)) {
     redirect("/");

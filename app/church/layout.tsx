@@ -1,17 +1,21 @@
-import type React from "react"
-import { redirect } from "next/navigation"
-import ChurchSidebar from "@/components/church/church-sidebar"
-import { supabaseServer } from "@/lib/supabase"
+import type React from "react";
+import { redirect } from "next/navigation";
+import ChurchSidebar from "@/components/church/church-sidebar";
+import { supabaseServer } from "@/lib/supabase";
 
-export default async function ChurchLayout({ children }: { children: React.ReactNode }) {
-  const supabase = supabaseServer()
+export default async function ChurchLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const supabase = supabaseServer();
 
   const {
     data: { session },
-  } = await supabase.auth.getSession()
+  } = await supabase.auth.getSession();
 
   if (!session) {
-    redirect("/auth/login")
+    redirect("/auth/login");
   }
 
   // Check if user has church role
@@ -19,19 +23,23 @@ export default async function ChurchLayout({ children }: { children: React.React
     .from("user_role_assignments")
     .select("user_roles(name)")
     .eq("user_id", session.user.id)
-    .single()
+    .single();
 
-  const userRole = roleData?.user_roles?.name
+  const userRole = roleData?.user_roles?.[0]?.name;
 
   if (!userRole || userRole !== "church") {
-    redirect("/")
+    redirect("/");
   }
 
   // Get church details
-  const { data: churchData } = await supabase.from("churches").select("*").eq("user_id", session.user.id).single()
+  const { data: churchData } = await supabase
+    .from("churches")
+    .select("*")
+    .eq("user_id", session.user.id)
+    .single();
 
   if (!churchData) {
-    redirect("/")
+    redirect("/");
   }
 
   return (
@@ -39,5 +47,5 @@ export default async function ChurchLayout({ children }: { children: React.React
       <ChurchSidebar churchName={churchData.name} />
       <div className="flex-1 overflow-auto">{children}</div>
     </div>
-  )
+  );
 }

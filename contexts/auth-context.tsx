@@ -47,15 +47,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        // Fetch user role
-        const { data: roleData } = await supabaseBrowser
-          .from("user_role_assignments")
-          .select("user_roles(name)")
-          .eq("user_id", session.user.id)
-          .single();
+        try {
+          // Fetch user role
+          const { data: roleData, error: roleError } = await supabaseBrowser
+            .from("user_role_assignments")
+            .select("role_id")
+            .eq("user_id", session.user.id)
+            .single();
 
-        // Fix the TypeScript error by properly accessing the nested object
-        setUserRole(roleData?.user_roles?.[0]?.name || null);
+          if (roleError) throw roleError;
+
+          if (roleData) {
+            const { data: role, error: roleNameError } = await supabaseBrowser
+              .from("user_roles")
+              .select("name")
+              .eq("id", roleData.role_id)
+              .single();
+
+            if (roleNameError) throw roleNameError;
+            setUserRole(role?.name || null);
+          }
+        } catch (err) {
+          console.error("Error fetching user role:", err);
+          setUserRole(null);
+        }
       }
 
       setIsLoading(false);
@@ -69,15 +84,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Fetch user role
-          const { data: roleData } = await supabaseBrowser
-            .from("user_role_assignments")
-            .select("user_roles(name)")
-            .eq("user_id", session.user.id)
-            .single();
+          try {
+            // Fetch user role
+            const { data: roleData, error: roleError } = await supabaseBrowser
+              .from("user_role_assignments")
+              .select("role_id")
+              .eq("user_id", session.user.id)
+              .single();
 
-          // Fix the TypeScript error by properly accessing the nested object
-          setUserRole(roleData?.user_roles?.[0]?.name || null);
+            if (roleError) throw roleError;
+
+            if (roleData) {
+              const { data: role, error: roleNameError } = await supabaseBrowser
+                .from("user_roles")
+                .select("name")
+                .eq("id", roleData.role_id)
+                .single();
+
+              if (roleNameError) throw roleNameError;
+              setUserRole(role?.name || null);
+            }
+          } catch (err) {
+            console.error("Error fetching user role:", err);
+            setUserRole(null);
+          }
         } else {
           setUserRole(null);
         }

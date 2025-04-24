@@ -1,15 +1,36 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getSupabaseServerClient } from "@/lib/supabase";
+import { supabaseServer } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import EventCard from "@/components/event-card";
 import MissionCard from "@/components/mission-card";
 import CountdownTimer from "@/components/countdown-timer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SocialMediaFeed from "@/components/social-media-feed";
 import AnimatedSection from "@/components/animated-section";
 
-async function getEvents() {
-  const { data, error } = await getSupabaseServerClient
+// Define interfaces for your data types
+interface Event {
+  id: number | string;
+  title: string;
+  slug: string;
+  location: string;
+  event_date: string;
+  image_url?: string;
+  color?: string;
+}
+
+interface GalleryImage {
+  id: number | string;
+  title: string;
+  category: string;
+  image_url?: string;
+  display_order: number;
+}
+
+async function getEvents(): Promise<Event[]> {
+  const supabase = supabaseServer();
+
+  const { data, error } = await supabase
     .from("events")
     .select("*")
     .order("event_date", { ascending: true })
@@ -23,8 +44,10 @@ async function getEvents() {
   return data || [];
 }
 
-async function getGalleryImages() {
-  const { data, error } = await getSupabaseServerClient
+async function getGalleryImages(): Promise<GalleryImage[]> {
+  const supabase = supabaseServer();
+
+  const { data, error } = await supabase
     .from("gallery_images")
     .select("*")
     .order("display_order", { ascending: true })
@@ -71,6 +94,12 @@ export default async function Home() {
               </h1>
               <p className="mt-4 text-xl opacity-90 md:text-2xl">BOMBAY CNI</p>
               <div className="mt-8">
+                <Button
+                  size="lg"
+                  className="rounded-full bg-red-600 hover:bg-red-700"
+                >
+                  Learn More
+                </Button>
               </div>
             </AnimatedSection>
           </div>
@@ -181,13 +210,13 @@ export default async function Home() {
               </span>
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {events.map((event) => (
+              {events.map((event: Event) => (
                 <Link key={event.id} href={`/events/${event.slug}`}>
                   <EventCard
                     title={event.title}
                     location={event.location}
-                    image={event.image_url}
-                    color={event.color}
+                    image={event.image_url || "/placeholder.svg"}
+                    color={event.color || "#FFFFFF"}
                     date={new Date(event.event_date)}
                   />
                 </Link>
@@ -218,7 +247,7 @@ export default async function Home() {
               </span>
             </h2>
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-              {galleryImages.map((image) => (
+              {galleryImages.map((image: GalleryImage) => (
                 <div
                   key={image.id}
                   className="group relative overflow-hidden rounded-lg"
@@ -267,64 +296,7 @@ export default async function Home() {
                 <span className="absolute -bottom-2 left-1/2 h-1 w-12 -translate-x-1/2 bg-red-600"></span>
               </span>
             </h2>
-            <Tabs defaultValue="youtube" className="mx-auto max-w-3xl">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="youtube">YouTube</TabsTrigger>
-                <TabsTrigger value="facebook">Facebook</TabsTrigger>
-              </TabsList>
-              <TabsContent value="youtube" className="mt-6">
-                <div className="rounded-lg border bg-card p-4 shadow">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-10 w-10 overflow-hidden rounded-full">
-                      <Image
-                        src="/logo.png"
-                        alt="BDYFC"
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                    <span className="font-semibold">BDYFC</span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
-                      <div
-                        key={i}
-                        className="aspect-video overflow-hidden rounded-md bg-muted"
-                      >
-                        <Image
-                          src={`/video-thumbnail-${(i % 3) + 1}.jpg`}
-                          alt={`Video thumbnail ${i}`}
-                          width={120}
-                          height={80}
-                          className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-4 flex gap-2">
-                    <Button variant="secondary" size="sm">
-                      Load More...
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-1"
-                    >
-                      Subscribe
-                    </Button>
-                  </div>
-                </div>
-              </TabsContent>
-              <TabsContent value="facebook" className="mt-6">
-                <div className="rounded-lg border bg-card p-4 shadow">
-                  <div className="flex items-center justify-center h-40 bg-muted rounded-md">
-                    <p className="text-muted-foreground">
-                      Facebook content will appear here
-                    </p>
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
+            <SocialMediaFeed />
           </div>
         </section>
       </AnimatedSection>

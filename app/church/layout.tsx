@@ -19,13 +19,30 @@ export default async function ChurchLayout({
   }
 
   // Check if user has church role
-  const { data: roleData } = await supabase
+  const { data: roleData, error: roleError } = await supabase
     .from("user_role_assignments")
-    .select("user_roles(name)")
+    .select("role_id")
     .eq("user_id", session.user.id)
     .single();
 
-  const userRole = roleData?.user_roles?.[0]?.name;
+  if (roleError) {
+    console.error("Error fetching role:", roleError);
+    redirect("/");
+  }
+
+  // Get the role name
+  const { data: role, error: roleNameError } = await supabase
+    .from("user_roles")
+    .select("name")
+    .eq("id", roleData.role_id)
+    .single();
+
+  if (roleNameError) {
+    console.error("Error fetching role name:", roleNameError);
+    redirect("/");
+  }
+
+  const userRole = role?.name;
 
   if (!userRole || userRole !== "church") {
     redirect("/");
@@ -43,7 +60,7 @@ export default async function ChurchLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col md:flex-row">
       <ChurchSidebar churchName={churchData.name} />
       <div className="flex-1 overflow-auto">{children}</div>
     </div>

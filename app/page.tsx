@@ -93,14 +93,7 @@ export default async function Home() {
                 Committee
               </h1>
               <p className="mt-4 text-xl opacity-90 md:text-2xl">BOMBAY CNI</p>
-              <div className="mt-8">
-                <Button
-                  size="lg"
-                  className="rounded-full bg-red-600 hover:bg-red-700"
-                >
-                  Learn More
-                </Button>
-              </div>
+              <div className="mt-8"></div>
             </AnimatedSection>
           </div>
         </div>

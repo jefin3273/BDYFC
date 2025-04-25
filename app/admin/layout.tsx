@@ -1,33 +1,35 @@
 import type React from "react";
 import { redirect } from "next/navigation";
 import AdminSidebar from "@/components/admin/admin-sidebar";
-import { supabaseServer } from "@/lib/supabase";
-import { cookies } from "next/headers"; // For proper server-side cookie handling
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 
 export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = cookies();
-  const supabase = await supabaseServer(); // Added await here
-
-  // We still need to check for a session as it contains the user ID
-  const {
-    data: { session },
-    error: sessionError,
-  } = await supabase.auth.getSession();
-
-  if (sessionError) {
-    console.error("Session error:", sessionError);
-    redirect("/auth/login");
-  }
-
-  if (!session) {
-    redirect("/auth/login");
-  }
-
   try {
+    const cookieStore = cookies();
+    const supabase = createServerComponentClient({
+      cookies: () => cookieStore,
+    });
+
+    // Get session using the enhanced server client that properly handles cookies
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError) {
+      console.error("Session error in admin layout:", sessionError);
+      redirect("/auth/login");
+    }
+
+    if (!session) {
+      redirect("/auth/login");
+    }
+
     // Get the user's role directly with a join query for efficiency
     const { data: userData, error: roleError } = await supabase
       .from("user_role_assignments")
@@ -46,7 +48,8 @@ export default async function AdminLayout({
       redirect("/");
     }
 
-    const userRole = userData.user_roles[0].name; // Adjusted this line based on your query structure
+    // Properly access the nested user_roles object
+    const userRole = userData.user_roles?.name;
 
     // Check if user has required role
     if (!userRole || !["admin", "moderator", "editor"].includes(userRole)) {

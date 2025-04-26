@@ -21,12 +21,21 @@ import { AlertCircle, CheckCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
 import PageHeader from "@/components/page-header";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface UserProfile {
   id: string;
   name: string;
   email: string;
   phone: string;
+  church_id?: string;
+  church_membership_status?: string;
 }
 
 interface Registration {
@@ -43,16 +52,27 @@ interface Registration {
   };
 }
 
+interface Church {
+  id: string;
+  name: string;
+  address: string;
+  contact_person: string;
+}
+
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, userRole } = useAuth();
   const { toast } = useToast();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
+  const [churches, setChurches] = useState<Church[]>([]);
+  const [selectedChurch, setSelectedChurch] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isProfileLoading, setIsProfileLoading] = useState(true);
+  const [isRequesting, setIsRequesting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [churchDetails, setChurchDetails] = useState<Church | null>(null);
+  const [role, setRole] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -61,71 +81,116 @@ export default function ProfilePage() {
     }
 
     if (user) {
-      // Fetch user profile from Supabase
-      const fetchUserProfile = async () => {
-        setIsProfileLoading(true);
-        try {
-          // Assuming you have a 'profiles' table with user_id, name, and phone fields
-          const { data, error } = await supabaseBrowser
-            .from("profiles")
-            .select("name, phone")
-            .eq("user_id", user.id)
-            .single();
-
-          if (error && error.code !== "PGRST116") {
-            // PGRST116 is for "no rows returned"
-            console.error("Error fetching profile:", error);
-            toast({
-              title: "Error",
-              description: "Failed to load profile information.",
-              variant: "destructive",
-            });
-          }
-
-          // Set profile with data from Supabase if available
-          setProfile({
-            id: user.id,
-            name: data?.name || "",
-            email: user.email || "",
-            phone: data?.phone || "",
-          });
-        } catch (error) {
-          console.error("Error in profile fetch:", error);
-        } finally {
-          setIsProfileLoading(false);
-        }
-      };
-
-      // Fetch user registrations
-      const fetchRegistrations = async () => {
-        const { data, error } = await supabaseBrowser
-          .from("registrations")
-          .select(
-            `
-            *,
-            events (id, title, event_date, location)
-          `
-          )
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
-
-        if (error) {
-          console.error("Error fetching registrations:", error);
-          toast({
-            title: "Error",
-            description: "Failed to load registration information.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        setRegistrations(data || []);
-      };
-
       fetchUserProfile();
       fetchRegistrations();
+      fetchChurches();
+      fetchUserRole(); // New function to fetch user role
     }
-  }, [user, isLoading, router, toast]);
+  }, [user, isLoading, router]);
+
+  // New function to fetch user role from database
+  const fetchUserRole = async () => {
+    try {
+      const { data, error } = await supabaseBrowser
+        .from("user_role_assignments")
+        .select(
+          `
+          user_roles (
+            name
+          )
+        `
+        )
+        .eq("user_id", user?.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching user role:", error);
+        return;
+      }
+
+      if (data && data.user_roles && Array.isArray(data.user_roles)) {
+        setRole(data.user_roles[0]?.name || null);
+      } else if (data && data.user_roles) {
+        // For when user_roles is returned as an object, not an array
+        setRole(data.user_roles.name || null);
+      }
+    } catch (err) {
+      console.error("Error in fetchUserRole:", err);
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    const { data, error } = await supabaseBrowser
+      .from("user_profiles")
+      .select("*")
+      .eq("user_id", user?.id)
+      .single();
+
+    if (error && error.code !== "PGRST116") {
+      console.error("Error fetching profile:", error);
+      return;
+    }
+
+    if (data) {
+      setProfile(data);
+
+      // If user has a church, fetch church details
+      if (data.church_id) {
+        const { data: churchData } = await supabaseBrowser
+          .from("churches")
+          .select("*")
+          .eq("id", data.church_id)
+          .single();
+
+        if (churchData) {
+          setChurchDetails(churchData);
+        }
+      }
+    } else {
+      // Create a new profile if it doesn't exist
+      setProfile({
+        id: "",
+        name: user?.user_metadata?.name || "",
+        email: user?.email || "",
+        phone: "",
+      });
+    }
+  };
+
+  const fetchRegistrations = async () => {
+    const { data, error } = await supabaseBrowser
+      .from("registrations")
+      .select(
+        `
+        *,
+        events (id, title, event_date, location)
+      `
+      )
+      .eq("user_id", user?.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching registrations:", error);
+      return;
+    }
+
+    setRegistrations(data || []);
+  };
+
+  const fetchChurches = async () => {
+    const { data, error } = await supabaseBrowser
+      .from("churches")
+      .select("*")
+      .eq("is_approved", true)
+      .order("name", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching churches:", error);
+      return;
+    }
+
+    setChurches(data || []);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -136,32 +201,62 @@ export default function ProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!profile || !user) return;
+    if (!profile) return;
 
     setIsUpdating(true);
     setError(null);
     setSuccess(false);
 
     try {
-      // Update user profile in Supabase
-      const { error } = await supabaseBrowser.from("profiles").upsert(
-        {
-          user_id: user.id,
-          name: profile.name,
-          phone: profile.phone,
-        },
-        {
-          onConflict: "user_id",
-        }
-      );
+      const profileData = {
+        user_id: user?.id,
+        name: profile.name,
+        email: profile.email,
+        phone: profile.phone,
+      };
 
-      if (error) throw error;
+      const { data: existingProfile } = await supabaseBrowser
+        .from("user_profiles")
+        .select("id")
+        .eq("user_id", user?.id)
+        .single();
+
+      if (existingProfile) {
+        // Update existing profile
+        const { error: updateError } = await supabaseBrowser
+          .from("user_profiles")
+          .update(profileData)
+          .eq("id", existingProfile.id);
+
+        if (updateError) {
+          // Check specifically for duplicate phone errors
+          if (
+            updateError.code === "23505" &&
+            updateError.message.includes("phone")
+          ) {
+            throw new Error(
+              "This phone number is already in use. Please use a different number."
+            );
+          }
+          throw updateError;
+        }
+      } else {
+        // Insert new profile
+        const { error: insertError } = await supabaseBrowser
+          .from("user_profiles")
+          .insert([profileData]);
+
+        if (insertError) throw insertError;
+      }
 
       setSuccess(true);
       toast({
         title: "Profile updated",
         description: "Your profile has been updated successfully.",
       });
+
+      // Fetch updated profile data after successful update
+      fetchUserProfile();
     } catch (err: any) {
       console.error("Error updating profile:", err);
       setError(
@@ -180,13 +275,87 @@ export default function ProfilePage() {
     }
   };
 
-  if (isLoading || isProfileLoading) {
+  const handleChurchRequest = async () => {
+    if (!selectedChurch || !user) return;
+
+    setIsRequesting(true);
+    setError(null);
+
+    try {
+      // Check if user already has a pending request
+      const { data: existingRequest } = await supabaseBrowser
+        .from("church_membership_requests")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("status", "pending")
+        .single();
+
+      if (existingRequest) {
+        setError("You already have a pending request to join a church.");
+        setIsRequesting(false);
+        return;
+      }
+
+      // Create membership request
+      const { error: requestError } = await supabaseBrowser
+        .from("church_membership_requests")
+        .insert([
+          {
+            user_id: user.id,
+            church_id: selectedChurch,
+            status: "pending",
+          },
+        ]);
+
+      if (requestError) throw requestError;
+
+      // Update user profile with pending status
+      const { error: profileError } = await supabaseBrowser
+        .from("user_profiles")
+        .update({
+          church_id: selectedChurch,
+          church_membership_status: "pending",
+        })
+        .eq("user_id", user.id);
+
+      if (profileError) throw profileError;
+
+      toast({
+        title: "Request sent",
+        description:
+          "Your request to join the church has been sent successfully.",
+      });
+
+      // Refresh profile data
+      fetchUserProfile();
+    } catch (err: any) {
+      console.error("Error requesting church membership:", err);
+      setError(
+        err.message ||
+          "There was an error sending your request. Please try again."
+      );
+      toast({
+        title: "Request failed",
+        description:
+          err.message ||
+          "There was an error sending your request. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRequesting(false);
+    }
+  };
+
+  if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-red-600 border-t-transparent"></div>
       </div>
     );
   }
+
+  // Check if user role should see church membership section
+  const shouldShowChurchMembership = role === "user" || role === null;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -209,6 +378,11 @@ export default function ProfilePage() {
                   <CardTitle>Profile Information</CardTitle>
                   <CardDescription>
                     Update your personal information
+                    {role && (
+                      <span className="block mt-1 text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full w-fit">
+                        <span className="capitalize">{role}</span>
+                      </span>
+                    )}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -269,6 +443,107 @@ export default function ProfilePage() {
                       {isUpdating ? "Updating..." : "Update Profile"}
                     </Button>
                   </form>
+
+                  {/* Church Membership Section - Only shown for user role */}
+                  {shouldShowChurchMembership && (
+                    <div className="mt-8 pt-6 border-t">
+                      <h3 className="text-lg font-medium mb-4">
+                        Church Membership
+                      </h3>
+
+                      {profile?.church_membership_status === "approved" &&
+                      churchDetails ? (
+                        <div className="space-y-2">
+                          <Alert className="bg-green-50 border-green-200">
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <AlertDescription className="text-green-700">
+                              You are a member of {churchDetails.name}
+                            </AlertDescription>
+                          </Alert>
+                          <div className="text-sm space-y-1 mt-2">
+                            <p>
+                              <span className="font-medium">Church:</span>{" "}
+                              {churchDetails.name}
+                            </p>
+                            <p>
+                              <span className="font-medium">Address:</span>{" "}
+                              {churchDetails.address}
+                            </p>
+                            <p>
+                              <span className="font-medium">
+                                Contact Person:
+                              </span>{" "}
+                              {churchDetails.contact_person}
+                            </p>
+                          </div>
+                        </div>
+                      ) : profile?.church_membership_status === "pending" ? (
+                        <Alert className="bg-yellow-50 border-yellow-200">
+                          <AlertCircle className="h-4 w-4 text-yellow-600" />
+                          <AlertDescription className="text-yellow-700">
+                            Your church membership request is pending approval.
+                          </AlertDescription>
+                        </Alert>
+                      ) : (
+                        <div className="space-y-4">
+                          <p className="text-sm text-muted-foreground">
+                            Join a church to participate in church events and
+                            activities.
+                          </p>
+                          <div className="space-y-2">
+                            <Label htmlFor="church">Select Church</Label>
+                            <Select
+                              value={selectedChurch}
+                              onValueChange={setSelectedChurch}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a church" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {churches.map((church) => (
+                                  <SelectItem key={church.id} value={church.id}>
+                                    {church.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <Button
+                            type="button"
+                            className="w-full"
+                            onClick={handleChurchRequest}
+                            disabled={!selectedChurch || isRequesting}
+                          >
+                            {isRequesting
+                              ? "Sending Request..."
+                              : "Request to Join"}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Show church information for church role users */}
+                  {role === "church" && churchDetails && (
+                    <div className="mt-8 pt-6 border-t">
+                      <h3 className="text-lg font-medium mb-4">
+                        Church Details
+                      </h3>
+                      <div className="space-y-2 bg-blue-50 p-4 rounded-md">
+                        <p className="font-medium text-blue-800">
+                          {churchDetails.name}
+                        </p>
+                        <p className="text-sm text-blue-700">
+                          <span className="font-medium">Address:</span>{" "}
+                          {churchDetails.address}
+                        </p>
+                        <p className="text-sm text-blue-700">
+                          <span className="font-medium">Contact Person:</span>{" "}
+                          {churchDetails.contact_person}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>

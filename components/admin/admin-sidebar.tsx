@@ -1,66 +1,76 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   Calendar,
   Users,
   ImageIcon,
   MessageSquare,
-  Settings,
   LogOut,
   ChevronDown,
   ChevronRight,
   Menu,
   X,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useAuth } from "@/contexts/auth-context"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { motion, AnimatePresence } from "framer-motion"
+  Home,
+  UserCheck,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/auth-context";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface AdminSidebarProps {
-  userRole: string
+  userRole: string;
+  unreadMessagesCount?: number;
 }
 
-export default function AdminSidebar({ userRole }: AdminSidebarProps) {
-  const pathname = usePathname()
-  const { signOut } = useAuth()
+export default function AdminSidebar({
+  userRole,
+  unreadMessagesCount = 0,
+}: AdminSidebarProps) {
+  const pathname = usePathname();
+  const { signOut } = useAuth();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     events: true,
     users: false,
     gallery: false,
-  })
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+    churches: false,
+  });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
+      setIsMobile(window.innerWidth < 768);
+    };
 
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
 
     return () => {
-      window.removeEventListener("resize", checkMobile)
-    }
-  }, [])
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, []);
 
   useEffect(() => {
     // Close mobile menu on route change
-    setIsMobileMenuOpen(false)
-  }, [pathname])
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => ({
       ...prev,
       [section]: !prev[section],
-    }))
-  }
+    }));
+  };
 
   const navItems = [
     {
@@ -89,6 +99,17 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
       ],
     },
     {
+      title: "Churches",
+      icon: Home,
+      roles: ["admin", "moderator"],
+      children: [
+        { title: "All Churches", href: "/admin/churches" },
+        { title: "Pending Verification", href: "/admin/churches/pending" },
+        { title: "Church Members", href: "/admin/churches/members" },
+        { title: "All Users", href: "/admin/churches/users" },
+      ],
+    },
+    {
       title: "Gallery",
       icon: ImageIcon,
       roles: ["admin", "moderator", "editor"],
@@ -102,16 +123,13 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
       href: "/admin/messages",
       icon: MessageSquare,
       roles: ["admin", "moderator"],
+      badge: unreadMessagesCount > 0 ? unreadMessagesCount : null,
     },
-    {
-      title: "Settings",
-      href: "/admin/settings",
-      icon: Settings,
-      roles: ["admin"],
-    },
-  ]
+  ];
 
-  const filteredNavItems = navItems.filter((item) => item.roles.includes(userRole))
+  const filteredNavItems = navItems.filter((item) =>
+    item.roles.includes(userRole)
+  );
 
   // Mobile menu toggle button
   const MobileMenuToggle = () => (
@@ -120,11 +138,20 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
         <span className="text-xl font-bold text-red-600">BDYFC</span>
         <span className="text-sm font-medium">Admin</span>
       </Link>
-      <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden">
-        {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="md:hidden"
+      >
+        {isMobileMenuOpen ? (
+          <X className="h-6 w-6" />
+        ) : (
+          <Menu className="h-6 w-6" />
+        )}
       </Button>
     </div>
-  )
+  );
 
   return (
     <>
@@ -139,7 +166,7 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={cn(
               "z-30 flex h-screen w-64 flex-col border-r bg-white",
-              isMobile ? "fixed left-0 top-0 shadow-lg" : "hidden md:flex",
+              isMobile ? "fixed left-0 top-0 shadow-lg" : "hidden md:flex"
             )}
           >
             <div className="hidden h-16 items-center border-b px-6 md:flex">
@@ -156,7 +183,9 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
                       <Collapsible
                         key={item.title}
                         open={openSections[item.title.toLowerCase()]}
-                        onOpenChange={() => toggleSection(item.title.toLowerCase())}
+                        onOpenChange={() =>
+                          toggleSection(item.title.toLowerCase())
+                        }
                       >
                         <CollapsibleTrigger asChild>
                           <Button
@@ -183,7 +212,7 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
                                   "w-full justify-start px-3 py-2 text-sm font-medium",
                                   pathname === child.href
                                     ? "bg-red-50 text-red-600 hover:bg-red-50 hover:text-red-600"
-                                    : "text-muted-foreground hover:bg-gray-100 hover:text-foreground",
+                                    : "text-muted-foreground hover:bg-gray-100 hover:text-foreground"
                                 )}
                               >
                                 {child.title}
@@ -192,7 +221,7 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
                           ))}
                         </CollapsibleContent>
                       </Collapsible>
-                    )
+                    );
                   }
 
                   return (
@@ -203,14 +232,23 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
                           "w-full justify-start px-3 py-2 text-sm font-medium",
                           pathname === item.href
                             ? "bg-red-50 text-red-600 hover:bg-red-50 hover:text-red-600"
-                            : "text-muted-foreground hover:bg-gray-100 hover:text-foreground",
+                            : "text-muted-foreground hover:bg-gray-100 hover:text-foreground"
                         )}
                       >
-                        <item.icon className="mr-2 h-4 w-4" />
-                        {item.title}
+                        <div className="flex w-full items-center justify-between">
+                          <div className="flex items-center">
+                            <item.icon className="mr-2 h-4 w-4" />
+                            {item.title}
+                          </div>
+                          {item.badge && (
+                            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs text-white">
+                              {item.badge}
+                            </span>
+                          )}
+                        </div>
                       </Button>
                     </Link>
-                  )
+                  );
                 })}
               </nav>
             </div>
@@ -239,5 +277,5 @@ export default function AdminSidebar({ userRole }: AdminSidebarProps) {
         />
       )}
     </>
-  )
+  );
 }

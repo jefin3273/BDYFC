@@ -56,9 +56,24 @@ export default async function AdminLayout({
       redirect("/");
     }
 
+    // Fetch unread messages count
+    const { data: messages, error: messagesError } = await supabase
+      .from("contact_messages")
+      .select("id")
+      .eq("is_read", false);
+
+    if (messagesError) {
+      console.error("Error fetching messages:", messagesError);
+    }
+
+    const unreadMessagesCount = messages?.length || 0;
+
     return (
       <div className="flex min-h-screen flex-col md:flex-row">
-        <AdminSidebar userRole={userRole} />
+        <AdminSidebar
+          userRole={userRole}
+          unreadMessagesCount={unreadMessagesCount}
+        />
         <div className="flex-1 overflow-auto">{children}</div>
       </div>
     );

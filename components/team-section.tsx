@@ -91,53 +91,6 @@ export default function TeamSection({
                       <p className="text-sm font-medium text-red-600">
                         {member.position}
                       </p>
-
-                      <div className="mt-3 flex justify-center space-x-3">
-                        {member.social_facebook && (
-                          <a
-                            href={member.social_facebook}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-slate-500 hover:text-blue-600 transition-colors"
-                            aria-label={`${member.name}'s Facebook`}
-                          >
-                            <Facebook className="h-5 w-5" />
-                          </a>
-                        )}
-                        {member.social_instagram && (
-                          <a
-                            href={member.social_instagram}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-slate-500 hover:text-pink-600 transition-colors"
-                            aria-label={`${member.name}'s Instagram`}
-                          >
-                            <Instagram className="h-5 w-5" />
-                          </a>
-                        )}
-                        {member.social_twitter && (
-                          <a
-                            href={member.social_twitter}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-slate-500 hover:text-blue-400 transition-colors"
-                            aria-label={`${member.name}'s Twitter`}
-                          >
-                            <Twitter className="h-5 w-5" />
-                          </a>
-                        )}
-                        {member.social_linkedin && (
-                          <a
-                            href={member.social_linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-slate-500 hover:text-blue-700 transition-colors"
-                            aria-label={`${member.name}'s LinkedIn`}
-                          >
-                            <Linkedin className="h-5 w-5" />
-                          </a>
-                        )}
-                      </div>
                     </div>
                   </div>
                 </motion.div>

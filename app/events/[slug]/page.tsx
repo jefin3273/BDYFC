@@ -5,7 +5,7 @@ import { Calendar, MapPin, Clock, Users } from "lucide-react";
 import { format } from "date-fns";
 import { supabaseServer } from "@/lib/supabase";
 import PageHeader from "@/components/page-header";
-import RegistrationForm from "@/components/registration-form";
+// import RegistrationForm from "@/components/registration-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AddToCalendarButton from "@/components/add-to-calendar-button";
 import ShareEventButton from "@/components/share-event-button";
@@ -122,23 +122,9 @@ export default async function EventPage({ params }: EventPageProps) {
                   </TabsList>
                   <TabsContent value="details" className="pt-4">
                     <div className="prose max-w-none">
-                      <p>{event.description}</p>
-                      <h3>Who Should Attend</h3>
-                      <p>
-                        This event is open to all youth members of the Bombay
-                        Diocese. Whether you're a regular participant or joining
-                        us for the first time, you're welcome to be part of this
-                        exciting event.
-                      </p>
-                      <h3>What to Bring</h3>
-                      <ul>
-                        <li>Your enthusiasm and energy</li>
-                        <li>A notebook and pen</li>
-                        <li>Water bottle</li>
-                        {!event.is_online && (
-                          <li>Comfortable clothing and footwear</li>
-                        )}
-                      </ul>
+                      <p>{event.description.split('\n\n').map((para, idx) => (
+                        <p key={idx} className="mb-2 whitespace-pre-wrap">{para}</p>
+                      ))}</p>
                     </div>
                   </TabsContent>
                   <TabsContent value="schedule" className="pt-4">
@@ -146,53 +132,64 @@ export default async function EventPage({ params }: EventPageProps) {
                       <div className="rounded-md border p-4">
                         <div className="font-medium">Opening Session</div>
                         <div className="text-sm text-muted-foreground">
-                          {format(eventDate, "h:mm a")} -{" "}
-                          {format(
-                            new Date(eventDate.getTime() + 3600000),
-                            "h:mm a"
-                          )}
+                          {format(eventDate, "9:00 a.m.")} - {format(new Date(eventDate.getTime() + 3600000), "10:00 a.m.")}
                         </div>
                         <div className="mt-2 text-sm">
-                          Welcome address and introduction to the event
+                          Welcome address, prayer, and introduction to the event theme.
                         </div>
                       </div>
+
                       <div className="rounded-md border p-4">
-                        <div className="font-medium">Main Program</div>
+                        <div className="font-medium">Stage Events (Part 1)</div>
                         <div className="text-sm text-muted-foreground">
-                          {format(
-                            new Date(eventDate.getTime() + 3600000),
-                            "h:mm a"
-                          )}{" "}
-                          -{" "}
-                          {format(
-                            new Date(eventDate.getTime() + 7200000),
-                            "h:mm a"
-                          )}
+                          10:00 a.m. – 12:00 p.m.
                         </div>
                         <div className="mt-2 text-sm">
-                          Core activities and presentations
+                          Live performances: Solo Singing (finalists), Instrumental, and Poetry Recitation.
                         </div>
                       </div>
+
                       <div className="rounded-md border p-4">
-                        <div className="font-medium">Closing Session</div>
+                        <div className="font-medium">Lunch Break</div>
                         <div className="text-sm text-muted-foreground">
-                          {format(
-                            new Date(eventDate.getTime() + 7200000),
-                            "h:mm a"
-                          )}{" "}
-                          -{" "}
-                          {endDate
-                            ? format(endDate, "h:mm a")
-                            : format(
-                                new Date(eventDate.getTime() + 10800000),
-                                "h:mm a"
-                              )}
+                          12:00 p.m. – 12:45 p.m.
                         </div>
                         <div className="mt-2 text-sm">
-                          Wrap-up, awards, and closing prayer
+                          Fellowship lunch for all participants and volunteers.
+                        </div>
+                      </div>
+
+                      <div className="rounded-md border p-4">
+                        <div className="font-medium">Stage Events (Part 2)</div>
+                        <div className="text-sm text-muted-foreground">
+                          12:45 p.m. – 2:30 p.m.
+                        </div>
+                        <div className="mt-2 text-sm">
+                          Continuation of stage events and Scripture Sprint.
+                        </div>
+                      </div>
+
+                      <div className="rounded-md border p-4">
+                        <div className="font-medium">Exhibition & Judging (Non-Stage Events)</div>
+                        <div className="text-sm text-muted-foreground">
+                          2:30 p.m. – 3:15 p.m.
+                        </div>
+                        <div className="mt-2 text-sm">
+                          Viewing and judging of Model Making, Best out of Waste, and Art submissions.
+                        </div>
+                      </div>
+
+                      <div className="rounded-md border p-4">
+                        <div className="font-medium">Closing Ceremony</div>
+                        <div className="text-sm text-muted-foreground">
+                          3:15 p.m. – 4:00 p.m.
+                        </div>
+                        <div className="mt-2 text-sm">
+                          Awards, Best Church & Individual Performer announcement, prayer, and vote of thanks.
                         </div>
                       </div>
                     </div>
+
                   </TabsContent>
                 </Tabs>
 
@@ -217,13 +214,13 @@ export default async function EventPage({ params }: EventPageProps) {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <RegistrationForm
                 eventId={event.id}
                 eventTitle={event.title}
                 eventDate={eventDate}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

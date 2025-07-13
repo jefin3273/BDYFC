@@ -6,10 +6,9 @@ import {
   Copy,
   Check,
   Facebook,
-  Twitter,
-  Linkedin,
-  Mail,
+  Mail
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -57,19 +56,10 @@ export default function ShareEventButton({ event }: ShareEventButtonProps) {
     );
   };
 
-  const shareToTwitter = () => {
+  const shareByWhatsapp = () => {
     window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        `Check out this event: ${event.title}`
-      )}&url=${encodeURIComponent(fullUrl)}`,
-      "_blank"
-    );
-  };
-
-  const shareToLinkedIn = () => {
-    window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-        fullUrl
+      `https://api.whatsapp.com/send?text=${encodeURIComponent(
+        `Check out this event: ${event.title}\n\n${fullUrl}`
       )}`,
       "_blank"
     );
@@ -104,17 +94,13 @@ export default function ShareEventButton({ event }: ShareEventButtonProps) {
           <Facebook className="mr-2 h-4 w-4" />
           Share to Facebook
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={shareToTwitter}>
-          <Twitter className="mr-2 h-4 w-4" />
-          Share to Twitter
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={shareToLinkedIn}>
-          <Linkedin className="mr-2 h-4 w-4" />
-          Share to LinkedIn
-        </DropdownMenuItem>
         <DropdownMenuItem onClick={shareByEmail}>
           <Mail className="mr-2 h-4 w-4" />
           Share by Email
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={shareByWhatsapp}>
+          <FaWhatsapp className="mr-2 h-4 w-4" />
+          Share by Whatsapp
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

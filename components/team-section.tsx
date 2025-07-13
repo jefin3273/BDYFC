@@ -60,9 +60,7 @@ export default function TeamSection({
           {rows.map((row, rowIndex) => (
             <div
               key={rowIndex}
-              className={`grid gap-8 md:grid-cols-3 ${
-                rowIndex % 2 === 1 ? "bg-indigo-900 rounded-xl p-8" : ""
-              }`}
+              className={`grid gap-8 md:grid-cols-3`}
             >
               {row.map((member, index) => (
                 <motion.div

@@ -84,7 +84,7 @@ export default function MobileMenu() {
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
-              className="fixed right-0 top-0 h-full w-[85%] max-w-sm bg-white p-0 shadow-xl"
+              className="fixed right-0 top-0 h-screen w-[85%] max-w-sm bg-white p-0 shadow-xl flex flex-col"
             >
               <div className="flex h-16 items-center justify-between border-b px-4">
                 <p className="text-lg font-semibold">Menu</p>
@@ -120,7 +120,7 @@ export default function MobileMenu() {
                 </nav>
 
                 <div className="border-t p-4">
-                  {user ? (
+                  {/* {user ? (
                     <div className="space-y-4">
                       <div className="rounded-md bg-gray-50 p-4">
                         <div className="flex items-center gap-3">
@@ -142,18 +142,18 @@ export default function MobileMenu() {
                       {(userRole === "admin" ||
                         userRole === "moderator" ||
                         userRole === "editor") && (
-                        <Link
-                          href="/admin"
-                          className="flex w-full items-center justify-between rounded-md py-3 text-base font-medium transition-colors hover:bg-gray-100 hover:text-red-600"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <div className="flex items-center gap-3">
-                            <Settings className="h-5 w-5" />
-                            <span>Admin Dashboard</span>
-                          </div>
-                          <ChevronRight className="h-4 w-4 text-gray-400" />
-                        </Link>
-                      )}
+                          <Link
+                            href="/admin"
+                            className="flex w-full items-center justify-between rounded-md py-3 text-base font-medium transition-colors hover:bg-gray-100 hover:text-red-600"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <div className="flex items-center gap-3">
+                              <Settings className="h-5 w-5" />
+                              <span>Admin Dashboard</span>
+                            </div>
+                            <ChevronRight className="h-4 w-4 text-gray-400" />
+                          </Link>
+                        )}
 
                       {userRole === "church" && (
                         <Link
@@ -209,7 +209,7 @@ export default function MobileMenu() {
                         Register
                       </Link>
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
             </motion.div>

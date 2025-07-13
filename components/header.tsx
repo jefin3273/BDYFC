@@ -6,15 +6,15 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import MobileMenu from "./mobile-menu";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/contexts/auth-context";
+// import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
 import {
   User,
   LogOut,
@@ -49,27 +49,27 @@ type RoleConfigType = {
 };
 
 // Define role-based navigation and icons
-const roleConfig: RoleConfigType = {
-  admin: { dashboardPath: "/admin", icon: UserCog, label: "Admin Dashboard" },
-  moderator: {
-    dashboardPath: "/moderator",
-    icon: Users,
-    label: "Moderator Dashboard",
-  },
-  editor: {
-    dashboardPath: "/editor",
-    icon: FileEdit,
-    label: "Editor Dashboard",
-  },
-  viewer: { dashboardPath: "/viewer", icon: Eye, label: "Viewer Dashboard" },
-  church: { dashboardPath: "/church", icon: Church, label: "Church Dashboard" },
-  user: { dashboardPath: "/", icon: User, label: "User Dashboard" },
-};
+// const roleConfig: RoleConfigType = {
+//   admin: { dashboardPath: "/admin", icon: UserCog, label: "Admin Dashboard" },
+//   moderator: {
+//     dashboardPath: "/moderator",
+//     icon: Users,
+//     label: "Moderator Dashboard",
+//   },
+//   editor: {
+//     dashboardPath: "/editor",
+//     icon: FileEdit,
+//     label: "Editor Dashboard",
+//   },
+//   viewer: { dashboardPath: "/viewer", icon: Eye, label: "Viewer Dashboard" },
+//   church: { dashboardPath: "/church", icon: Church, label: "Church Dashboard" },
+//   user: { dashboardPath: "/", icon: User, label: "User Dashboard" },
+// };
 
 export default function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const { user, signOut, userRole } = useAuth();
+  // const { user, signOut, userRole } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -83,15 +83,15 @@ export default function Header() {
   }, []);
 
   // Get role configuration if available
-  const roleData =
-    userRole && roleConfig[userRole as RoleType]
-      ? roleConfig[userRole as RoleType]
-      : null;
+  // const roleData =
+  //   userRole && roleConfig[userRole as RoleType]
+  //     ? roleConfig[userRole as RoleType]
+  //     : null;
 
-  // Get first letter of email for avatar fallback
-  const getInitial = () => {
-    return user?.email ? user.email[0].toUpperCase() : "U";
-  };
+  // // Get first letter of email for avatar fallback
+  // const getInitial = () => {
+  //   return user?.email ? user.email[0].toUpperCase() : "U";
+  // };
 
   return (
     <header
@@ -120,7 +120,7 @@ export default function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-4">
-          {user ? (
+          {/* {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -202,7 +202,7 @@ export default function Header() {
                 Sign In
               </Button>
             </Link>
-          )}
+          )} */}
           <MobileMenu />
         </div>
       </div>

@@ -24,30 +24,28 @@ export default function GalleryPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function fetchImages() {
-      setLoading(true)
-      const { data, error } = await supabaseBrowser
-        .from("gallery_images")
-        .select("*")
-        .order("display_order", { ascending: true })
-
-      if (error) {
-        console.error("Error fetching gallery images:", error)
-        setLoading(false)
-        return
-      }
-
+  async function fetchImages() {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/gallery')
+      const data: GalleryImage[] = await res.json()
       setImages(data || [])
 
-      // Extract unique categories
-      const uniqueCategories = Array.from(new Set(data?.map((img) => img.category) || []))
+      const uniqueCategories: string[] = Array.from(
+        new Set(data.map((img: GalleryImage) => img.category))
+      )
       setCategories(uniqueCategories)
-
+    } catch (error) {
+      console.error('Error fetching gallery images:', error)
+    } finally {
       setLoading(false)
     }
+  }
 
-    fetchImages()
-  }, [])
+  fetchImages()
+}, [])
+
+
 
   const filteredImages = selectedCategory === "all" ? images : images.filter((img) => img.category === selectedCategory)
 
@@ -100,10 +98,6 @@ export default function GalleryPage() {
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100" />
-                      <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-white opacity-0 transition-opacity group-hover:opacity-100">
-                        <h3 className="text-lg font-bold">{image.title}</h3>
-                        <p className="mt-1 text-sm">{image.category}</p>
-                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -142,8 +136,8 @@ export default function GalleryPage() {
                 className="object-contain"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-4">
-                <h3 className="text-xl font-bold text-white">{selectedImage.title}</h3>
-                <p className="mt-1 text-sm text-white/80">{selectedImage.description}</p>
+                {/* <h3 className="text-xl font-bold text-white">{selectedImage.title}</h3>
+                <p className="mt-1 text-sm text-white/80">{selectedImage.description}</p> */}
               </div>
             </div>
           </motion.div>

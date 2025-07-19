@@ -24,7 +24,7 @@ interface GalleryImage {
   title: string;
   category: string;
   image_url?: string;
-  display_order: number;
+  description: string;
 }
 
 async function getEvents(): Promise<Event[]> {
@@ -45,20 +45,40 @@ async function getEvents(): Promise<Event[]> {
 }
 
 async function getGalleryImages(): Promise<GalleryImage[]> {
-  const supabase = supabaseServer();
-
-  const { data, error } = await supabase
-    .from("gallery_images")
-    .select("*")
-    .order("display_order", { ascending: true })
-    .limit(6);
-
-  if (error) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/gallery`, {
+      cache: 'no-store' // Ensure fresh data on each request
+    });
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch gallery images');
+    }
+    
+    const allImages: GalleryImage[] = await response.json();
+    
+    // Group images by category
+    const imagesByCategory = allImages.reduce((acc, image) => {
+      if (!acc[image.category]) {
+        acc[image.category] = [];
+      }
+      acc[image.category].push(image);
+      return acc;
+    }, {} as Record<string, GalleryImage[]>);
+    
+    // Get the first 3 categories and take 2 images from each
+    const selectedCategories = Object.keys(imagesByCategory).slice(0, 3);
+    const selectedImages: GalleryImage[] = [];
+    
+    selectedCategories.forEach(category => {
+      const categoryImages = imagesByCategory[category].slice(0, 2);
+      selectedImages.push(...categoryImages);
+    });
+    
+    return selectedImages;
+  } catch (error) {
     console.error("Error fetching gallery images:", error);
     return [];
   }
-
-  return data || [];
 }
 
 export default async function Home() {
@@ -247,10 +267,7 @@ export default async function Home() {
                 >
                   <div className="aspect-square">
                     <Image
-                      src={
-                        image.image_url ||
-                        "/placeholder.svg?height=300&width=300"
-                      }
+                      src={image.image_url || "/placeholder.svg?height=300&width=300"}
                       alt={image.title}
                       width={400}
                       height={400}
@@ -258,8 +275,8 @@ export default async function Home() {
                     />
                     <div className="absolute inset-0 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-white opacity-0 transition-opacity group-hover:opacity-100">
-                      <h3 className="text-lg font-bold">{image.title}</h3>
-                      <p className="mt-1 text-sm">{image.category}</p>
+                      {/* <h3 className="text-lg font-bold">{image.title}</h3>
+                      <p className="mt-1 text-sm">{image.category}</p> */}
                     </div>
                   </div>
                 </div>

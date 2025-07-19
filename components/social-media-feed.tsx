@@ -113,42 +113,67 @@ export default function SocialMediaFeed() {
 
   const fetchYouTubeVideos = async (): Promise<SocialMediaPost[]> => {
     try {
-      const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YOUTUBE_CHANNEL_ID}&maxResults=50&order=date&type=video&key=${YOUTUBE_API_KEY}`
-      );
+      // Try the alternative API first
+      let response = await fetch('/api/social/youtube-alternative');
+      let useAlternative = true;
 
-      if (!response.ok)
-        throw new Error(`YouTube API error: ${response.status}`);
+      // If alternative fails, try the original
+      if (!response.ok) {
+        console.log('Alternative YouTube API failed, trying original...');
+        response = await fetch('/api/social/youtube');
+        useAlternative = false;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('YouTube API error:', errorData);
+        return [];
+      }
 
       const data = await response.json();
 
-      return data.items.map((item: YouTubeVideo) => ({
-        id: item.id,
-        platform: "youtube",
-        title: item.snippet.title,
-        description: item.snippet.description,
-        image_url: item.snippet.thumbnails.medium.url,
-        post_url: `https://www.youtube.com/watch?v=${item.id}`,
-        created_at: item.snippet.publishedAt,
-      }));
+      return data.items?.map((item: any) => {
+        // Extract video ID based on API type
+        let videoId: string;
+
+        if (useAlternative) {
+          // For playlist items API (alternative)
+          videoId = item.id; // This should already be the video ID from our transformation
+        } else {
+          // For search API (original)
+          videoId = typeof item.id === 'string' ? item.id : item.id?.videoId;
+        }
+
+        console.log('Video ID:', videoId); // Debug log
+
+        return {
+          id: videoId,
+          platform: "youtube",
+          title: item.snippet.title,
+          description: item.snippet.description,
+          image_url: item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url,
+          post_url: `https://www.youtube.com/watch?v=${videoId}`,
+          created_at: item.snippet.publishedAt,
+        };
+      }) || [];
     } catch (error) {
       console.error("YouTube fetch error:", error);
       return [];
     }
   };
 
+
   const fetchFacebookPosts = async (): Promise<SocialMediaPost[]> => {
     try {
-      const response = await fetch(
-        `https://graph.facebook.com/v17.0/${FACEBOOK_PAGE_ID}/posts?fields=id,message,full_picture,permalink_url,created_time&access_token=${FACEBOOK_ACCESS_TOKEN}`
-      );
+      const response = await fetch('/api/social/facebook');
 
-      if (!response.ok)
+      if (!response.ok) {
         throw new Error(`Facebook API error: ${response.status}`);
+      }
 
       const data = await response.json();
 
-      return data.data.map((item: FacebookPost) => ({
+      return data.data?.map((item: FacebookPost) => ({
         id: item.id,
         platform: "facebook",
         title: item.message?.split("\n")[0] || "Facebook Post",
@@ -156,7 +181,7 @@ export default function SocialMediaFeed() {
         image_url: item.full_picture || "",
         post_url: item.permalink_url,
         created_at: item.created_time,
-      }));
+      })) || [];
     } catch (error) {
       console.error("Facebook fetch error:", error);
       return [];
@@ -165,16 +190,15 @@ export default function SocialMediaFeed() {
 
   const fetchInstagramPosts = async (): Promise<SocialMediaPost[]> => {
     try {
-      const response = await fetch(
-        `https://graph.instagram.com/${INSTAGRAM_USER_ID}/media?fields=id,caption,media_url,permalink,timestamp&access_token=${INSTAGRAM_ACCESS_TOKEN}`
-      );
+      const response = await fetch('/api/social/instagram');
 
-      if (!response.ok)
+      if (!response.ok) {
         throw new Error(`Instagram API error: ${response.status}`);
+      }
 
       const data = await response.json();
 
-      return data.data.map((item: InstagramPost) => ({
+      return data.data?.map((item: InstagramPost) => ({
         id: item.id,
         platform: "instagram",
         title: item.caption?.text?.split("\n")[0] || "Instagram Post",
@@ -182,7 +206,7 @@ export default function SocialMediaFeed() {
         image_url: item.media_url,
         post_url: item.permalink,
         created_at: item.timestamp,
-      }));
+      })) || [];
     } catch (error) {
       console.error("Instagram fetch error:", error);
       return [];

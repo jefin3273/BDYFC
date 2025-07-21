@@ -46,7 +46,7 @@ async function getEvents(): Promise<Event[]> {
 
 async function getGalleryImages(): Promise<GalleryImage[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/preview-gallery`, { cache: 'no-store' });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/preview-gallery`, { cache: 'no-store' });
 
     if (!response.ok) {
       throw new Error('Failed to fetch preview gallery images');

@@ -46,40 +46,20 @@ async function getEvents(): Promise<Event[]> {
 
 async function getGalleryImages(): Promise<GalleryImage[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/gallery`, {
-      cache: 'no-store' // Ensure fresh data on each request
-    });
-    
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/preview-gallery`, { cache: 'no-store' });
+
     if (!response.ok) {
-      throw new Error('Failed to fetch gallery images');
+      throw new Error('Failed to fetch preview gallery images');
     }
-    
-    const allImages: GalleryImage[] = await response.json();
-    
-    // Group images by category
-    const imagesByCategory = allImages.reduce((acc, image) => {
-      if (!acc[image.category]) {
-        acc[image.category] = [];
-      }
-      acc[image.category].push(image);
-      return acc;
-    }, {} as Record<string, GalleryImage[]>);
-    
-    // Get the first 3 categories and take 2 images from each
-    const selectedCategories = Object.keys(imagesByCategory).slice(0, 3);
-    const selectedImages: GalleryImage[] = [];
-    
-    selectedCategories.forEach(category => {
-      const categoryImages = imagesByCategory[category].slice(0, 2);
-      selectedImages.push(...categoryImages);
-    });
-    
-    return selectedImages;
+
+    const images: GalleryImage[] = await response.json();
+    return images;
   } catch (error) {
     console.error("Error fetching gallery images:", error);
     return [];
   }
 }
+
 
 export default async function Home() {
   const events = await getEvents();

@@ -37,24 +37,13 @@ export default async function AboutPage() {
                 Our Mission
               </h2>
               <p className="text-lg text-muted-foreground">
-                The Bombay Diocesan Youth Fellowship Committee (BDYFC) is
-                dedicated to nurturing the spiritual growth of young people
-                through fellowship, worship, and service.
+                The Bombay Diocesan Youth Fellowship Committee exists to ignite hearts and shape lives by leading young people toward a deeper relationship with Jesus Christ.
               </p>
               <p className="text-muted-foreground">
-                We strive to create a vibrant community where young people can
-                grow in their faith, develop leadership skills, and make a
-                positive impact in their churches and communities. Through
-                various events, workshops, and outreach programs, we aim to
-                empower the youth to live out their Christian values in today's
-                world.
+                We strive to be a guiding light, helping youth find their identity and purpose in Him. Through fellowship, worship, creative expression, and community support, we offer a platform where every young soul can boldly submit their talents to God and grow in faith.
               </p>
               <p className="text-muted-foreground">
-                Founded in 1970, BDYFC has been serving the youth of the Bombay
-                Diocese for over five decades. Our committee consists of
-                dedicated volunteers who are passionate about youth ministry and
-                committed to fostering an environment of spiritual growth and
-                fellowship.
+                Whether it's spiritual guidance, a listening ear, or simply a space to belong, we stand together, building up a generation that lives boldly for Christ.
               </p>
             </div>
             <div className="relative aspect-video overflow-hidden rounded-lg lg:aspect-square">
@@ -71,7 +60,6 @@ export default async function AboutPage() {
 
       <TeamSection
         title="Meet Our Team"
-        subtitle="Dedicated individuals working together to serve the youth of Bombay Diocese"
         members={teamMembers}
       />
     </div>

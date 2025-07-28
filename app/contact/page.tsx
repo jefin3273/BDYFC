@@ -85,7 +85,7 @@ export default function ContactPage() {
                     <div>
                       <h3 className="font-semibold">Email</h3>
                       <p className="text-sm text-muted-foreground">
-                        contact@bdyfc.org
+                        cni.bdyfc@gmail.com
                       </p>
                     </div>
                   </div>

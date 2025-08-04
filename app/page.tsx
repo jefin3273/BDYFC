@@ -230,7 +230,7 @@ export default async function Home() {
       </AnimatedSection>
 
       {/* Gallery Preview Section */}
-      <AnimatedSection>
+      {/* <AnimatedSection>
         <section className="bg-slate-50 py-12 md:py-16 lg:py-20">
           <div className="container px-4 md:px-6">
             <h2 className="relative mb-12 text-center text-3xl font-bold">
@@ -256,7 +256,7 @@ export default async function Home() {
                     <div className="absolute inset-0 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center text-white opacity-0 transition-opacity group-hover:opacity-100">
                       {/* <h3 className="text-lg font-bold">{image.title}</h3>
-                      <p className="mt-1 text-sm">{image.category}</p> */}
+                      <p className="mt-1 text-sm">{image.category}</p>
                     </div>
                   </div>
                 </div>
@@ -274,7 +274,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
-      </AnimatedSection>
+      </AnimatedSection> */}
 
       {/* Social Connect Section */}
       <AnimatedSection>

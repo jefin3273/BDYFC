@@ -1,45 +1,26 @@
-export const runtime = 'nodejs';
-
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-
-// Add these lines at the top
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID!;
-
-async function notifyTelegram(churchName: string, topicName: string, leaderName: string, email: string) {
-  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
-  const message =
-    `🎉 *New Model Making Registration*\n` +
-    `*Church:* ${churchName}\n` +
-    `*Topic:* ${topicName}\n` +
-    `*Leader Name:* ${leaderName}\n` +
-    `*Email:* ${email}\n` +
-    `*Registered:* ${new Date().toLocaleString()}`;
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-
-  try {
-    await fetch(url, {
-      method: 'POST',
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-        parse_mode: 'Markdown',
-        disable_web_page_preview: true,
-      }),
-    });
-  } catch (e) {
-    // Optionally log, but do not block
-    console.error('Telegram notification failed', e);
-  }
-}
 
 interface EmailRequest {
   email: string;
   churchName: string;
   topicName: string;
   leaderName: string;
+}
+
+async function notifyN8n(churchName: string, topicName: string, leaderName: string, email: string) {
+  const webhookUrl = process.env.N8N_EVENT_REGISTRATION_WEBHOOK_URL!;
+  const payload = { churchName, topicName, leaderName, email };
+
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch (e) {
+    console.error('n8n notification failed', e);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -57,54 +38,54 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Email content
+    // Build email contents (same HTML and text as before)
     const htmlContent = `
       <!DOCTYPE html>
       <html>
       <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Talent Fiesta Registration Confirmation</title>
         <style>
-          body { 
-            font-family: Arial, sans-serif; 
-            line-height: 1.6; 
-            color: #333; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            padding: 20px; 
+          body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
           }
-          .header { 
-            background-color: #b91c1c; 
-            color: white; 
-            padding: 20px; 
-            text-align: center; 
-            border-radius: 8px 8px 0 0; 
+          .header {
+            background-color: #b91c1c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
           }
-          .content { 
-            background-color: #f9f9f9; 
-            padding: 30px; 
-            border-radius: 0 0 8px 8px; 
-            border: 1px solid #ddd; 
+          .content {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #ddd;
           }
-          .highlight { 
-            background-color: #fee2e2; 
-            padding: 15px; 
-            border-radius: 5px; 
-            margin: 20px 0; 
-            border-left: 4px solid #b91c1c; 
+          .highlight {
+            background-color: #fee2e2;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #b91c1c;
           }
-          .footer { 
-            text-align: center; 
-            margin-top: 30px; 
-            padding-top: 20px; 
-            border-top: 1px solid #ddd; 
-            color: #666; 
-            font-size: 12px; 
+          .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
           }
-          .trophy { 
-            font-size: 24px; 
-            color: #b91c1c; 
+          .trophy {
+            font-size: 24px;
+            color: #b91c1c;
           }
         </style>
       </head>
@@ -113,12 +94,12 @@ export async function POST(request: NextRequest) {
           <h1>🏆 Talent Fiesta - Model Making Event</h1>
           <p>Registration Confirmation</p>
         </div>
-        
+
         <div class="content">
           <h2>Dear ${leaderName},</h2>
-          
+
           <p>Congratulations! Your registration for the Talent Fiesta Model Making Event has been <strong>successfully confirmed</strong>.</p>
-          
+
           <div class="highlight">
             <h3>Registration Details:</h3>
             <p><strong>Church:</strong> ${churchName}</p>
@@ -127,6 +108,7 @@ export async function POST(request: NextRequest) {
             <p><strong>Email:</strong> ${email}</p>
             <p><strong>Registration Date:</strong> ${new Date().toLocaleDateString()}</p>
           </div>
+
           <h3>Event Rules</h3>
           <ul>
             <li>Each group must consist of a minimum of 4 members and a maximum of 8 members.</li>
@@ -134,7 +116,8 @@ export async function POST(request: NextRequest) {
             <li><strong>Event Day Preparation:</strong> Teams must build their models on the day of the event, based on the assigned topic.</li>
             <li><strong>Post-Event Responsibility:</strong> Participants must take home their respective models and all materials after the event; no storage or disposal will be provided by organizers.</li>
             <li><strong>Time Limit:</strong> Teams will have a maximum of 2 hours to complete their model. All work must be finished within the allotted time.</li>
-          </ul>          
+          </ul>
+
           <h3>Important Notes:</h3>
           <ul>
             <li>Please save this email for your records</li>
@@ -142,13 +125,13 @@ export async function POST(request: NextRequest) {
             <li>Further event details will be communicated via email</li>
             <li>Contact us if you have any questions</li>
           </ul>
-          
+
           <p>We're excited to see your creative masterpiece at the Talent Fiesta '25!</p>
-          
-          <p>Best regards,<br>
+
+          <p>Best regards,<br/>
           <strong>DYFC Bombay, CNI</strong></p>
         </div>
-        
+
         <div class="footer">
           <p>© 2025 Talent Fiesta - Model Making Event</p>
         </div>
@@ -159,39 +142,39 @@ export async function POST(request: NextRequest) {
     const textContent = `
       Talent Fiesta - Model Making Event
       Registration Confirmation
-      
+
       Dear ${leaderName},
-      
+
       Congratulations! Your registration for the Talent Fiesta Model Making Event has been successfully confirmed.
-      
+
       Registration Details:
       - Church: ${churchName}
       - Topic: ${topicName}
       - Leader: ${leaderName}
       - Email: ${email}
       - Registration Date: ${new Date().toLocaleDateString()}
-      
+
       What's Next?
       - Start preparing your model based on the selected topic
       - Gather all necessary materials and tools
       - Form your team and assign roles
       - Review the event guidelines and rules
-      
+
       Important Notes:
       - Please save this email for your records
       - Your registration is now locked and cannot be changed
       - Further event details will be communicated via email
       - Contact us if you have any questions
-      
+
       We're excited to see your creative masterpiece at the Talent Fiesta!
-      
+
       Best regards,
       DYFC Bombay, CNI
-      
+
       © 2025 Talent Fiesta - Model Making Event
     `;
 
-    // Send email
+    // Send confirmation email
     await transporter.sendMail({
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: email,
@@ -200,20 +183,19 @@ export async function POST(request: NextRequest) {
       html: htmlContent,
     });
 
-    // ADD Telegram notification (no await needed if you don't want to block)
-    notifyTelegram(churchName, topicName, leaderName, email);
+    // Notify n8n webhook (non-blocking, errors logged)
+    notifyN8n(churchName, topicName, leaderName, email);
 
     return NextResponse.json({
       success: true,
-      message: 'Confirmation email sent successfully'
+      message: 'Registration successful and confirmation email sent!'
     });
-
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error in registration:', error);
     return NextResponse.json(
       {
         success: false,
-        message: 'Failed to send confirmation email'
+        message: 'Registration failed, please try again later.'
       },
       { status: 500 }
     );

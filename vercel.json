@@ -1,9 +1,6 @@
 {
   "version": 2,
   "functions": {
-    "api/**/*.js": {
-      "regions": ["sin1", "fra1", "iad1"]
-    },
     "api/**/*.ts": {
       "regions": ["sin1", "fra1", "iad1"]
     }

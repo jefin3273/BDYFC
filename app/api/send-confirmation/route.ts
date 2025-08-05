@@ -1,6 +1,37 @@
-// app/api/send-confirmation/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+
+// Add these lines at the top
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID!;
+
+async function notifyTelegram(churchName: string, topicName: string, leaderName: string, email: string) {
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+  const message =
+    `🎉 *New Talent Fiesta Registration*\n` +
+    `*Church:* ${churchName}\n` +
+    `*Topic:* ${topicName}\n` +
+    `*Leader Name:* ${leaderName}\n` +
+    `*Email:* ${email}\n` +
+    `*Registered:* ${new Date().toLocaleString()}`;
+  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: message,
+        parse_mode: 'Markdown',
+        disable_web_page_preview: true,
+      }),
+    });
+  } catch (e) {
+    // Optionally log, but do not block
+    console.error('Telegram notification failed', e);
+  }
+}
 
 interface EmailRequest {
   email: string;
@@ -169,6 +200,9 @@ export async function POST(request: NextRequest) {
       text: textContent,
       html: htmlContent,
     });
+
+    // ADD Telegram notification (no await needed if you don't want to block)
+    notifyTelegram(churchName, topicName, leaderName, email);
 
     return NextResponse.json({
       success: true,

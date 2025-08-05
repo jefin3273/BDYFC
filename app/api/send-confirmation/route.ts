@@ -1,6 +1,7 @@
+export const runtime = 'nodejs';
+
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
-export const runtime = 'nodejs';  // disable edge runtime for this route
 
 // Add these lines at the top
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN!;

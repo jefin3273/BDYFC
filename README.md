@@ -114,7 +114,7 @@ My team supported in **ideation and feature planning**, but all technical develo
 
 ## 🤝 Acknowledgements
 
-Thanks to my community and ideation team for the constant support and brainstorming. This project wouldn’t have had such a clear and meaningful direction without them.
+Thanks to my community and ideation team for the constant support and brainstorming. This project wouldn’t have had such a clear and meaningful direction without them
 
 ---
 

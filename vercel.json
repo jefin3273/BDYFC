@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "edge",
+      "regions": ["sin1", "fra1", "iad1"]
+    },
+    "api/**/*.js": {
+      "regions": ["sin1", "fra1", "iad1"]
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" }
+  ]
+}

@@ -8,7 +8,7 @@ const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID!;
 async function notifyTelegram(churchName: string, topicName: string, leaderName: string, email: string) {
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
   const message =
-    `🎉 *New Talent Fiesta Registration*\n` +
+    `🎉 *New Model Making Registration*\n` +
     `*Church:* ${churchName}\n` +
     `*Topic:* ${topicName}\n` +
     `*Leader Name:* ${leaderName}\n` +
@@ -19,7 +19,7 @@ async function notifyTelegram(churchName: string, topicName: string, leaderName:
   try {
     await fetch(url, {
       method: 'POST',
-      headers: {"Content-Type": "application/json"},
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: TELEGRAM_CHAT_ID,
         text: message,
@@ -125,15 +125,14 @@ export async function POST(request: NextRequest) {
             <p><strong>Email:</strong> ${email}</p>
             <p><strong>Registration Date:</strong> ${new Date().toLocaleDateString()}</p>
           </div>
-          
-          <h3>What's Next?</h3>
+          <h3>Event Rules</h3>
           <ul>
-            <li>Start preparing your model based on the selected topic</li>
-            <li>Gather all necessary materials and tools</li>
-            <li>Form your team and assign roles</li>
-            <li>Review the event guidelines and rules</li>
-          </ul>
-          
+            <li>Each group must consist of a minimum of 4 members and a maximum of 8 members.</li>
+            <li><strong>Team Coordination:</strong> Group leaders are responsible for coordinating with their church youth and selecting a topic for their team.</li>
+            <li><strong>Event Day Preparation:</strong> Teams must build their models on the day of the event, based on the assigned topic.</li>
+            <li><strong>Post-Event Responsibility:</strong> Participants must take home their respective models and all materials after the event; no storage or disposal will be provided by organizers.</li>
+            <li><strong>Time Limit:</strong> Teams will have a maximum of 2 hours to complete their model. All work must be finished within the allotted time.</li>
+          </ul>          
           <h3>Important Notes:</h3>
           <ul>
             <li>Please save this email for your records</li>
@@ -149,7 +148,6 @@ export async function POST(request: NextRequest) {
         </div>
         
         <div class="footer">
-          <p>This is an automated confirmation email. Please do not reply to this message.</p>
           <p>© 2025 Talent Fiesta - Model Making Event</p>
         </div>
       </body>
@@ -186,9 +184,8 @@ export async function POST(request: NextRequest) {
       We're excited to see your creative masterpiece at the Talent Fiesta!
       
       Best regards,
-      Talent Fiesta Organizing Committee
+      DYFC Bombay, CNI
       
-      This is an automated confirmation email. Please do not reply to this message.
       © 2025 Talent Fiesta - Model Making Event
     `;
 

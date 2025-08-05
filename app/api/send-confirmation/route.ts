@@ -141,10 +141,10 @@ export async function POST(request: NextRequest) {
             <li>Contact us if you have any questions</li>
           </ul>
           
-          <p>We're excited to see your creative masterpiece at the Talent Fiesta!</p>
+          <p>We're excited to see your creative masterpiece at the Talent Fiesta '25!</p>
           
           <p>Best regards,<br>
-          <strong>Talent Fiesta Organizing Committee</strong></p>
+          <strong>DYFC Bombay, CNI</strong></p>
         </div>
         
         <div class="footer">

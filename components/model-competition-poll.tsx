@@ -61,9 +61,9 @@ const TalentFiestaPage: React.FC = () => {
       setChurches(data || []);
     } catch (error: any) {
       console.error('Error fetching churches:', error);
-      setMessage({ 
-        type: 'error', 
-        text: `Failed to load churches: ${error.message || 'Unknown error'}` 
+      setMessage({
+        type: 'error',
+        text: `Failed to load churches: ${error.message || 'Unknown error'}`
       });
     }
   };
@@ -83,9 +83,9 @@ const TalentFiestaPage: React.FC = () => {
       setTopics(data || []);
     } catch (error: any) {
       console.error('Error fetching topics:', error);
-      setMessage({ 
-        type: 'error', 
-        text: `Failed to load topics: ${error.message || 'Unknown error'}` 
+      setMessage({
+        type: 'error',
+        text: `Failed to load topics: ${error.message || 'Unknown error'}`
       });
     }
   };
@@ -151,7 +151,7 @@ const TalentFiestaPage: React.FC = () => {
 
   const getErrorMessage = (error: any): string => {
     if (!error) return 'Unknown error occurred';
-    
+
     // Handle Supabase specific errors
     if (error.code) {
       switch (error.code) {
@@ -170,7 +170,7 @@ const TalentFiestaPage: React.FC = () => {
           return `Database error (${error.code}): ${error.message}`;
       }
     }
-    
+
     // Handle network errors
     if (error.message) {
       if (error.message.includes('fetch')) {
@@ -181,7 +181,7 @@ const TalentFiestaPage: React.FC = () => {
       }
       return error.message;
     }
-    
+
     return 'An unexpected error occurred';
   };
 
@@ -193,7 +193,7 @@ const TalentFiestaPage: React.FC = () => {
 
     try {
       console.log('Starting registration process...');
-      
+
       // Step 1: Verify access code and church availability
       console.log('Verifying access code for church ID:', formData.churchId);
       const { data: churchData, error: churchError } = await supabaseBrowser
@@ -322,9 +322,9 @@ const TalentFiestaPage: React.FC = () => {
       await sendConfirmationEmail(formData.email, churchData.name, topicData.name);
 
       // Success!
-      setMessage({ 
-        type: 'success', 
-        text: `Registration successful! ${churchData.name} has been registered for ${topicData.name}. Confirmation email sent to ${formData.email}` 
+      setMessage({
+        type: 'success',
+        text: `Registration successful! ${churchData.name} has been registered for ${topicData.name}. Confirmation email sent to ${formData.email}`
       });
 
       // Reset form
@@ -342,9 +342,9 @@ const TalentFiestaPage: React.FC = () => {
 
     } catch (error: any) {
       console.error('Unexpected registration error:', error);
-      setMessage({ 
-        type: 'error', 
-        text: `Unexpected error: ${getErrorMessage(error)}. Please try again or contact support.` 
+      setMessage({
+        type: 'error',
+        text: `Unexpected error: ${getErrorMessage(error)}. Please try again or contact support.`
       });
     } finally {
       setIsSubmitting(false);
@@ -381,11 +381,10 @@ const TalentFiestaPage: React.FC = () => {
 
           {/* Message Display */}
           {message.text && (
-            <div className={`mb-6 p-4 rounded-lg border flex items-center gap-3 ${
-              message.type === 'error' 
-                ? 'bg-red-50 border-red-200 text-red-700' 
-                : 'bg-green-50 border-green-200 text-green-700'
-            }`}>
+            <div className={`mb-6 p-4 rounded-lg border flex items-center gap-3 ${message.type === 'error'
+              ? 'bg-red-50 border-red-200 text-red-700'
+              : 'bg-green-50 border-green-200 text-green-700'
+              }`}>
               <div className="w-5 h-5 flex-shrink-0">
                 {message.type === 'error' ? '⚠️' : '✅'}
               </div>
@@ -433,13 +432,18 @@ const TalentFiestaPage: React.FC = () => {
                 >
                   <option value="">Choose a topic...</option>
                   {topics.map((topic) => (
-                    <option 
-                      key={topic.id} 
+                    <option
+                      key={topic.id}
                       value={topic.id}
+                      title={topic.name} // Full description in tooltip!
                       disabled={!isTopicAvailable(topic)}
                       className={!isTopicAvailable(topic) ? 'text-gray-400' : ''}
                     >
-                      {topic.name} ({topic.current_count}/{topic.total_limit}) {!isTopicAvailable(topic) ? '(Full)' : ''}
+                      {topic.name.length > 60
+                        ? topic.name.slice(0, 60) + '...'
+                        : topic.name
+                      }
+                      ({topic.current_count}/{topic.total_limit}) {!isTopicAvailable(topic) ? '(Full)' : ''}
                     </option>
                   ))}
                 </select>
@@ -521,13 +525,12 @@ const TalentFiestaPage: React.FC = () => {
             <h3 className="font-semibold mb-3 text-red-800">Available Topics:</h3>
             <div className="space-y-2">
               {topics.map((topic) => (
-                <div 
-                  key={topic.id} 
-                  className={`flex justify-between items-center p-2 rounded ${
-                    isTopicAvailable(topic) 
-                      ? 'bg-white border border-red-200' 
-                      : 'bg-gray-100 border border-gray-300 text-gray-500'
-                  }`}
+                <div
+                  key={topic.id}
+                  className={`flex justify-between items-center p-2 rounded ${isTopicAvailable(topic)
+                    ? 'bg-white border border-red-200'
+                    : 'bg-gray-100 border border-gray-300 text-gray-500'
+                    }`}
                 >
                   <span className="font-medium">{topic.name}</span>
                   <span className="text-sm">

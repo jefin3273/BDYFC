@@ -264,7 +264,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
     } else {
       const newAttempts = otpAttempts + 1;
       setOtpAttempts(newAttempts);
-      
+
       if (newAttempts >= 3) {
         setOtpError('Too many incorrect attempts. Please request a new OTP.');
         setMessage({ type: 'error', text: 'Too many incorrect attempts. Please request a new OTP.' });
@@ -275,9 +275,9 @@ const BibleQuizRegistrationForm: React.FC = () => {
       } else {
         const remainingAttempts = 3 - newAttempts;
         setOtpError(`Incorrect OTP. ${remainingAttempts} attempt${remainingAttempts > 1 ? 's' : ''} remaining.`);
-        setMessage({ 
-          type: 'error', 
-          text: `Incorrect OTP. You have ${remainingAttempts} attempt${remainingAttempts > 1 ? 's' : ''} remaining.` 
+        setMessage({
+          type: 'error',
+          text: `Incorrect OTP. You have ${remainingAttempts} attempt${remainingAttempts > 1 ? 's' : ''} remaining.`
         });
         setOtp(''); // Clear the input for retry
       }
@@ -457,7 +457,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                   <BookOpen className="w-8 h-8 text-white" />
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-600 via-rose-600 to-red-800 bg-clip-text text-transparent">
-                  Bible Quiz 2025
+                  BDYFC Bible Quiz 2025
                 </h1>
                 <div className="p-3 bg-gradient-to-r from-rose-500 to-red-500 rounded-full shadow-lg">
                   <Crown className="w-8 h-8 text-white" />
@@ -503,7 +503,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                 <div>
                   <CardTitle className="text-2xl font-bold">Registration Form</CardTitle>
                   <CardDescription className="text-red-100">
-                    Fill in your details to participate in the Bible Quiz 2025
+                    Fill in your details to participate in the BDYFC Bible Quiz 2025
                   </CardDescription>
                 </div>
               </div>
@@ -756,7 +756,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                       <li>• Enter names exactly as you want them on certificates</li>
                     </ul>
                   </div>
-                  
+
                   <div className="overflow-x-auto">
                     <div className="min-w-full">
                       <div className="grid grid-cols-5 gap-4 mb-4 p-4 bg-gradient-to-r from-red-100 to-rose-100 rounded-lg">
@@ -770,13 +770,12 @@ const BibleQuizRegistrationForm: React.FC = () => {
                       {formData.participants.map((participant, index) => (
                         <div key={index} className="grid grid-cols-5 gap-4 mb-4 p-4 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
                           <div className="flex items-center justify-center">
-                            <Badge 
-                              variant="secondary" 
-                              className={`w-8 h-8 flex items-center justify-center ${
-                                index === 0 
-                                  ? 'bg-red-600 text-white' 
-                                  : 'bg-red-100 text-red-700'
-                              }`}
+                            <Badge
+                              variant="secondary"
+                              className={`w-8 h-8 flex items-center justify-center ${index === 0
+                                ? 'bg-red-600 text-white'
+                                : 'bg-red-100 text-red-700'
+                                }`}
                             >
                               {index + 1}
                               {index === 0 && <Crown className="w-3 h-3 ml-1" />}
@@ -789,11 +788,10 @@ const BibleQuizRegistrationForm: React.FC = () => {
                               onChange={(e) => handleParticipantChange(index, 'name', e.target.value)}
                               placeholder={index === 0 ? "Auto-filled from Group Leader" : "Enter name"}
                               disabled={index === 0 || isSubmitting}
-                              className={`border-2 transition-colors ${
-                                index === 0 
-                                  ? 'bg-red-50 border-red-300 focus:border-red-400' 
-                                  : 'focus:border-red-500'
-                              }`}
+                              className={`border-2 transition-colors ${index === 0
+                                ? 'bg-red-50 border-red-300 focus:border-red-400'
+                                : 'focus:border-red-500'
+                                }`}
                             />
                             {index === 0 && (
                               <div className="absolute -top-2 -right-2">
@@ -831,16 +829,15 @@ const BibleQuizRegistrationForm: React.FC = () => {
                               onChange={(e) => handleParticipantChange(index, 'mobileNo', e.target.value)}
                               placeholder={index === 0 ? "Auto-filled from Contact" : "Mobile number"}
                               disabled={index === 0 || isSubmitting}
-                              className={`border-2 transition-colors ${
-                                index === 0 
-                                  ? 'bg-red-50 border-red-300 focus:border-red-400' 
-                                  : 'focus:border-red-500'
-                              }`}
+                              className={`border-2 transition-colors ${index === 0
+                                ? 'bg-red-50 border-red-300 focus:border-red-400'
+                                : 'focus:border-red-500'
+                                }`}
                             />
                           </div>
                         </div>
                       ))}
-                      
+
                       {filledParticipantCount < 2 && (
                         <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                           <div className="flex items-center gap-2 text-yellow-800">
@@ -853,6 +850,65 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         </div>
                       )}
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Declaration Section */}
+              <Card className="mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-600 rounded-lg">
+                      <Heart className="w-5 h-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl text-red-900">Declaration</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
+                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
+                        <Crown className="w-4 h-4" />
+                        Declaration of Group Leader:
+                      </h4>
+                      <p className="text-red-800 leading-relaxed">
+                        I, <span className="font-semibold text-red-900">
+                          {formData.groupLeaderName || '[Please Enter the Group Leader Name in the beginning of the form]'}
+                        </span>, hereby declare that the above details are true as of my knowledge and belief.
+                        I hereby agree to follow the rules and regulations of BDYFC Bible Quiz 2025. I understand that after form submission,
+                        I must print the PDF form, get proper signature from priest and church stamp, and mail it to cni.bdyfc@gmail.com
+                        for the registration to be complete.
+                      </p>
+                    </div>
+
+                    {/* <Separator className="bg-red-200" />
+
+                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
+                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
+                        <Church className="w-4 h-4" />
+                        Declaration of Priest in Charge:
+                      </h4>
+                      <p className="text-red-800 leading-relaxed">
+                        I certify that the participants mentioned above are from the youth fellowship of my parish
+                        and the details provided above are genuine. I have verified their eligibility and approve
+                        their participation in BDYFC Bible Quiz 2025.
+                      </p>
+                      <div className="mt-4 p-4 bg-white rounded border border-red-200">
+                        <p className="text-sm text-red-700 mb-2 font-semibold">
+                          Note: This section must be filled by the Priest and the form must be stamped with official church seal.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-red-600">
+                          <div>
+                            <p>Priest Name: _________________________</p>
+                            <p className="mt-2">Signature: _________________________</p>
+                          </div>
+                          <div>
+                            <p>Date: _________________________</p>
+                            <p className="mt-2">Church Seal: [STAMP HERE]</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div> */}
                   </div>
                 </CardContent>
               </Card>
@@ -924,11 +980,10 @@ const BibleQuizRegistrationForm: React.FC = () => {
                               placeholder="Enter 6-digit OTP"
                               maxLength={6}
                               disabled={isSubmitting}
-                              className={`border-2 transition-colors ${
-                                otpError 
-                                  ? 'border-red-400 focus:border-red-500 bg-red-50' 
-                                  : 'focus:border-red-500'
-                              }`}
+                              className={`border-2 transition-colors ${otpError
+                                ? 'border-red-400 focus:border-red-500 bg-red-50'
+                                : 'focus:border-red-500'
+                                }`}
                             />
                             {otpError && (
                               <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
@@ -992,65 +1047,6 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         </div>
                       </div>
                     )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Declaration Section */}
-              <Card className="mb-8 border border-red-200 shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-600 rounded-lg">
-                      <Heart className="w-5 h-5 text-white" />
-                    </div>
-                    <CardTitle className="text-xl text-red-900">Declaration</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-6">
-                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
-                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
-                        <Crown className="w-4 h-4" />
-                        Declaration of Group Leader:
-                      </h4>
-                      <p className="text-red-800 leading-relaxed">
-                        I, <span className="font-semibold text-red-900">
-                          {formData.groupLeaderName || '[Please Enter the Group Leader Name in the beginning of the form]'}
-                        </span>, hereby declare that the above details are true as of my knowledge and belief.
-                        I hereby agree to follow the rules and regulations of Bible Quiz 2025. I understand that after form submission,
-                        I must print the PDF form, get proper signature from priest and church stamp, and mail it to cni.bdyfc@gmail.com
-                        for the registration to be complete.
-                      </p>
-                    </div>
-
-                    <Separator className="bg-red-200" />
-
-                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
-                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
-                        <Church className="w-4 h-4" />
-                        Declaration of Priest in Charge:
-                      </h4>
-                      <p className="text-red-800 leading-relaxed">
-                        I certify that the participants mentioned above are from the youth fellowship of my parish
-                        and the details provided above are genuine. I have verified their eligibility and approve
-                        their participation in Bible Quiz 2025.
-                      </p>
-                      <div className="mt-4 p-4 bg-white rounded border border-red-200">
-                        <p className="text-sm text-red-700 mb-2 font-semibold">
-                          Note: This section must be filled by the Priest and the form must be stamped with official church seal.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-red-600">
-                          <div>
-                            <p>Priest Name: _________________________</p>
-                            <p className="mt-2">Signature: _________________________</p>
-                          </div>
-                          <div>
-                            <p>Date: _________________________</p>
-                            <p className="mt-2">Church Seal: [STAMP HERE]</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </CardContent>
               </Card>

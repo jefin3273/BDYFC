@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.resolve.alias.canvas = false;
+    }
+    return config;
+  },
+  serverExternalPackages: ['pdfkit'],
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -11,4 +18,4 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+export default nextConfig;

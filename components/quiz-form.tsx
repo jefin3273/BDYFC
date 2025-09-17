@@ -1,0 +1,1093 @@
+'use client';
+
+import React, { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card';
+import {
+  Button
+} from '@/components/ui/button';
+import {
+  Input
+} from '@/components/ui/input';
+import {
+  Label
+} from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import {
+  Alert,
+  AlertDescription
+} from '@/components/ui/alert';
+import {
+  Separator
+} from '@/components/ui/separator';
+import {
+  Badge
+} from '@/components/ui/badge';
+import {
+  BookOpen,
+  Users,
+  Church,
+  MapPin,
+  Phone,
+  Mail,
+  Crown,
+  Star,
+  Heart,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  Cross,
+  Sparkles,
+  Shield,
+  Download,
+  Send
+} from 'lucide-react';
+import { Combobox } from "@headlessui/react";
+
+interface Participant {
+  name: string;
+  gender: string;
+  dob: string;
+  mobileNo: string;
+}
+
+interface FormData {
+  groupLeaderName: string;
+  church: string;
+  location: string;
+  langOfQuiz: string;
+  zone: string;
+  contactNo: string;
+  alternateNo: string;
+  mailId: string;
+  participants: Participant[];
+}
+
+const BibleQuizRegistrationForm: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    groupLeaderName: '',
+    church: '',
+    location: '',
+    langOfQuiz: '',
+    zone: '',
+    contactNo: '',
+    alternateNo: '',
+    mailId: '',
+    participants: Array(8).fill(null).map(() => ({
+      name: '',
+      gender: '',
+      dob: '',
+      mobileNo: ''
+    }))
+  });
+
+  const [verificationEmail, setVerificationEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [generatedOtp, setGeneratedOtp] = useState('');
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpAttempts, setOtpAttempts] = useState(0);
+  const [otpError, setOtpError] = useState('');
+
+  const churches = [
+    "Bethany Church, Mira Road",
+    "Church of Brethren, Dahanu Road",
+    "CNI Marathi Congregation, Virar",
+    "Emmanuel Mar. Church, Vasai",
+    "Holy Immanuel Church (CNI), Vasai",
+    "St. James Tamil Church, Boisar",
+    "St. Matthew's Tamil Church, Virar",
+    "St. Peter's Church, Palghar",
+    "Wada Church",
+    "All Saints Church, Govandi",
+    "Holy Trinity Church, Chembur",
+    "Bethel Church Tamil, Chembur",
+    "Govandi Church",
+    "Jubilee Cong. (Eng.)",
+    "Jubilee Malayalam Church",
+    "Jubilee Marathi Church",
+    "Jubilee Tamil Church",
+    "Khrista Prakash Church",
+    "St. Francis Church (Old)",
+    "St. Francis Church (New)",
+    "St. Matthias' Tamil Church, CNI",
+    "St. Francis Church (Tamil)",
+    "Christ Church (Tamil), Poisar",
+    "Ambroli Gujarathi Church, Vile Parle",
+    "CNI Andheri English Congregation",
+    "Emmanuel Tamil Church, Orlem, Malad",
+    "Holy Jerusalem Church, Andheri",
+    "Holy Redeemer Church, Vile Parle",
+    "Holy Trinity Church, Bhagatsingh Nagar",
+    "Pandita Ramabai Church, Goregaon",
+    "St. Andrew's Tamil, Kandivili",
+    "St. James Mal. Church, Borivali",
+    "St. John Tamil Church, Goregaon",
+    "St. Paul's Malayalam Church, Vakola",
+    "St. Stephen's Church, Bandra",
+    "Ambroli Marathi Church, Girgaum",
+    "All Saints Church, Malabar Hill",
+    "Bombay Telugu Church, Mazagaon",
+    "Christ Church CNI, Byculla",
+    "Emmanuel Gujarathi Church, Grant Road",
+    "Emmanuel Mar. Church, Grant Road",
+    "Holy Cross Church, Umerkhadi",
+    "Hume Memorial Church, Byculla",
+    "St. Andrew's Marathi Church",
+    "St. Paul's Tamil Church, Byculla",
+    "St. Thomas Cathedral",
+    "Wesley Church, CNI",
+    "St. John The Evangelist Church",
+    "Church of St. Mary The Virgin (Eng)",
+    "Church of St. Mary The Virgin (Mal.)",
+    "Church of The Holy Redeemer, Dadar",
+    "Good Shepherd Church, Dharavi",
+    "Grace Church, Sion - Koliwada",
+    "Holy Nativity Church, Matunga",
+    "St. Michael And All Angels Church, Kurla",
+    "St. Paul's Marathi Church, Matunga",
+    "Worli Church",
+    "St. Christopher's Mal. Church",
+    "St. Christopher's Marathi Church, Kalyan",
+    "St. Paul's Tamil Church, Dombivli",
+    "St. Peter's Tamil Church, Bhiwandi",
+    "St. Thomas Church, Ambernath",
+    "St. Luke's Tamil Church, Vithalwadi",
+    "Home of Faith Tamil Church CNI",
+    "Mulund Marathi Mandali",
+    "St. James Church, Thane",
+    "Vikhroli Church, CNI",
+    "St. Mark's Tamil Church, Vikhroli",
+    "St. Peter's Tamil Church, Mulund",
+    "St. Stephen's Tamil Church, Bhandup",
+    "St. Thomas Tamil Church, Airoli",
+    "The Church of Righteousness, Thane"
+  ];
+
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const filteredChurches = query === "" ? churches : churches.filter((church) =>
+    church.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Auto-populate first participant with group leader info
+  React.useEffect(() => {
+    if (formData.groupLeaderName.trim() && formData.contactNo.trim()) {
+      const newParticipants = [...formData.participants];
+      newParticipants[0] = {
+        ...newParticipants[0],
+        name: formData.groupLeaderName,
+        mobileNo: formData.contactNo
+      };
+      setFormData(prev => ({ ...prev, participants: newParticipants }));
+    }
+  }, [formData.groupLeaderName, formData.contactNo]);
+
+  // Initialize verification email with form email when form email changes
+  React.useEffect(() => {
+    if (formData.mailId && !verificationEmail) {
+      setVerificationEmail(formData.mailId);
+    }
+  }, [formData.mailId, verificationEmail]);
+
+  const sendOtp = async () => {
+    if (!verificationEmail.trim()) {
+      setMessage({ type: 'error', text: 'Please enter email address for verification' });
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(verificationEmail)) {
+      setMessage({ type: 'error', text: 'Please enter a valid email address' });
+      return;
+    }
+
+    setOtpLoading(true);
+    setMessage({ type: '', text: '' });
+    setOtpError('');
+
+    try {
+      const response = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: verificationEmail })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to send OTP');
+      }
+
+      setGeneratedOtp(result.otp);
+      setIsOtpSent(true);
+      setOtpAttempts(0);
+      setMessage({ type: 'success', text: 'OTP sent successfully to your email!' });
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'Failed to send OTP' });
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const verifyOtp = () => {
+    if (!otp.trim()) {
+      setOtpError('Please enter the OTP');
+      setMessage({ type: 'error', text: 'Please enter the OTP' });
+      return;
+    }
+
+    if (otp.length !== 6) {
+      setOtpError('OTP must be 6 digits');
+      setMessage({ type: 'error', text: 'OTP must be 6 digits' });
+      return;
+    }
+
+    if (otp === generatedOtp) {
+      setIsOtpVerified(true);
+      setOtpError('');
+      setMessage({ type: 'success', text: 'OTP verified successfully!' });
+    } else {
+      const newAttempts = otpAttempts + 1;
+      setOtpAttempts(newAttempts);
+      
+      if (newAttempts >= 3) {
+        setOtpError('Too many incorrect attempts. Please request a new OTP.');
+        setMessage({ type: 'error', text: 'Too many incorrect attempts. Please request a new OTP.' });
+        setIsOtpSent(false);
+        setOtp('');
+        setGeneratedOtp('');
+        setOtpAttempts(0);
+      } else {
+        const remainingAttempts = 3 - newAttempts;
+        setOtpError(`Incorrect OTP. ${remainingAttempts} attempt${remainingAttempts > 1 ? 's' : ''} remaining.`);
+        setMessage({ 
+          type: 'error', 
+          text: `Incorrect OTP. You have ${remainingAttempts} attempt${remainingAttempts > 1 ? 's' : ''} remaining.` 
+        });
+        setOtp(''); // Clear the input for retry
+      }
+    }
+  };
+
+  const validateForm = (): boolean => {
+    // Basic validations
+    const requiredFields = [
+      { field: 'groupLeaderName', label: 'Group leader name' },
+      { field: 'church', label: 'Church name' },
+      { field: 'location', label: 'Location' },
+      { field: 'langOfQuiz', label: 'Language of quiz' },
+      { field: 'zone', label: 'Zone' },
+      { field: 'contactNo', label: 'Contact number' },
+      { field: 'mailId', label: 'Email address' }
+    ];
+
+    for (const { field, label } of requiredFields) {
+      if (!formData[field as keyof FormData] || !String(formData[field as keyof FormData]).trim()) {
+        setMessage({ type: 'error', text: `Please enter ${label}` });
+        return false;
+      }
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.mailId)) {
+      setMessage({ type: 'error', text: 'Please enter a valid email address' });
+      return false;
+    }
+
+    if (!isOtpVerified) {
+      setMessage({ type: 'error', text: 'Please verify your email address with OTP' });
+      return false;
+    }
+
+    // Check if at least 2 participants are filled (minimum team size)
+    const filledParticipants = formData.participants.filter(p => p.name.trim());
+    if (filledParticipants.length < 2) {
+      setMessage({ type: 'error', text: 'Minimum 2 participants are required for a team' });
+      return false;
+    }
+
+    // Validate filled participants
+    for (let i = 0; i < formData.participants.length; i++) {
+      const participant = formData.participants[i];
+      if (participant.name.trim()) {
+        if (!participant.gender) {
+          setMessage({ type: 'error', text: `Please select gender for participant ${i + 1}` });
+          return false;
+        }
+        if (!participant.dob) {
+          setMessage({ type: 'error', text: `Please enter date of birth for participant ${i + 1}` });
+          return false;
+        }
+      }
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setMessage({ type: '', text: '' });
+
+    try {
+      // Filter out empty participants
+      const activeParticipants = formData.participants.filter(p => p.name.trim());
+
+      const registrationData = {
+        ...formData,
+        participants: activeParticipants,
+        verificationEmail
+      };
+
+      const response = await fetch('/api/bible-quiz-registration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registrationData)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Registration failed');
+      }
+
+      setMessage({
+        type: 'success',
+        text: `Registration successful! Group Number: ${result.groupNumber}. Confirmation details and PDF have been sent to ${formData.mailId}. Please print the form, get proper signature and stamp from your priest, and mail it to cni.bdyfc@gmail.com`
+      });
+
+      // Reset form
+      setFormData({
+        groupLeaderName: '',
+        church: '',
+        location: '',
+        langOfQuiz: '',
+        zone: '',
+        contactNo: '',
+        alternateNo: '',
+        mailId: '',
+        participants: Array(8).fill(null).map(() => ({
+          name: '',
+          gender: '',
+          dob: '',
+          mobileNo: ''
+        }))
+      });
+
+      // Reset verification states
+      setVerificationEmail('');
+      setOtp('');
+      setGeneratedOtp('');
+      setIsOtpSent(false);
+      setIsOtpVerified(false);
+      setOtpAttempts(0);
+      setOtpError('');
+
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      setMessage({
+        type: 'error',
+        text: error.message || 'Registration failed. Please try again.'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (field: keyof FormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (message.type === 'error') {
+      setMessage({ type: '', text: '' });
+    }
+  };
+
+  const handleParticipantChange = (index: number, field: keyof Participant, value: string) => {
+    const newParticipants = [...formData.participants];
+    newParticipants[index] = { ...newParticipants[index], [field]: value };
+    setFormData(prev => ({ ...prev, participants: newParticipants }));
+
+    if (message.type === 'error') {
+      setMessage({ type: '', text: '' });
+    }
+  };
+
+  const filledParticipantCount = formData.participants.filter(p => p.name.trim()).length;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-rose-50 to-pink-50">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 text-red-200 opacity-20">
+          <Cross size={120} />
+        </div>
+        <div className="absolute bottom-40 left-20 text-red-200 opacity-20">
+          <BookOpen size={80} />
+        </div>
+        <div className="absolute bottom-20 right-40 text-red-200 opacity-15">
+          <Heart size={90} />
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative">
+        <div className="max-w-5xl mx-auto">
+
+          {/* Stunning Header */}
+          <div className="text-center mb-12">
+            <div className="relative mb-8">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-32 h-32 bg-gradient-to-r from-red-400 to-rose-500 rounded-full opacity-20 blur-xl"></div>
+              </div>
+              <div className="relative flex items-center justify-center gap-4 mb-6">
+                <div className="p-3 bg-gradient-to-r from-red-500 to-rose-500 rounded-full shadow-lg">
+                  <BookOpen className="w-8 h-8 text-white" />
+                </div>
+                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-600 via-rose-600 to-red-800 bg-clip-text text-transparent">
+                  Bible Quiz 2025
+                </h1>
+                <div className="p-3 bg-gradient-to-r from-rose-500 to-red-500 rounded-full shadow-lg">
+                  <Crown className="w-8 h-8 text-white" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Sparkles className="w-5 h-5 text-red-500" />
+              <p className="text-xl font-medium text-gray-700">
+                "Let the word of Christ dwell in you richly in all wisdom"
+              </p>
+              <Sparkles className="w-5 h-5 text-red-500" />
+            </div>
+            <p className="text-gray-600 text-lg">Colossians 3:16</p>
+          </div>
+
+          {/* Message Display */}
+          {message.text && (
+            <Alert className={`mb-8 border-2 ${message.type === 'error'
+              ? 'border-red-300 bg-red-50 text-red-700'
+              : 'border-green-200 bg-green-50 text-green-700'
+              }`}>
+              <div className="flex items-center gap-2">
+                {message.type === 'error' ?
+                  <AlertCircle className="w-5 h-5" /> :
+                  <CheckCircle className="w-5 h-5" />
+                }
+                <AlertDescription className="text-sm font-medium">
+                  {message.text}
+                </AlertDescription>
+              </div>
+            </Alert>
+          )}
+
+          {/* Registration Form */}
+          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-t-lg">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-lg">
+                  <BookOpen className="w-6 h-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl font-bold">Registration Form</CardTitle>
+                  <CardDescription className="text-red-100">
+                    Fill in your details to participate in the Bible Quiz 2025
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="p-8">
+
+              {/* Instructions Section */}
+              <Card className="mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-600 rounded-lg">
+                      <AlertCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl text-red-900">Important Instructions</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
+                    <ul className="space-y-3 text-red-800">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <span>After form submission, you will receive a confirmation email with a PDF form.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <span>Print the PDF form and get proper signature from your priest and official stamp of the church.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <span>Mail the signed and stamped form to: <strong>cni.bdyfc@gmail.com</strong></span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <span>Your registration will only be complete after we receive the signed form.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <span>Write participant names exactly as you want them on certificates.</span>
+                      </li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Group Leader Details Section */}
+              <Card className="mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-600 rounded-lg">
+                      <Crown className="w-5 h-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl text-red-900">Group Leader Details</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div className="space-y-2">
+                      <Label htmlFor="groupLeader" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <Crown className="w-4 h-4 text-red-600" />
+                        Group Leader Name *
+                      </Label>
+                      <Input
+                        id="groupLeader"
+                        value={formData.groupLeaderName}
+                        onChange={(e) => handleInputChange('groupLeaderName', e.target.value)}
+                        placeholder="Enter group leader name"
+                        disabled={isSubmitting}
+                        className="border-2 focus:border-red-500 transition-colors"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label htmlFor="church" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <Church className="w-4 h-4 text-red-600" />
+                        Church *
+                      </label>
+
+                      <Combobox
+                        value={formData.church}
+                        onChange={(value) => handleInputChange("church", value ?? "")}
+                        disabled={isSubmitting}
+                      >
+                        <div className="relative">
+                          <Combobox.Input
+                            className="w-full border-2 p-2 rounded focus:border-red-500"
+                            placeholder="Select Church"
+                            onChange={(event) => setQuery(event.target.value)}
+                            displayValue={(church) => (church as string)}
+                          />
+                          <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                            {filteredChurches.length === 0 ? (
+                              <div className="cursor-default select-none p-2 text-gray-500">
+                                No churches found.
+                              </div>
+                            ) : (
+                              filteredChurches.map((church) => (
+                                <Combobox.Option
+                                  key={church}
+                                  value={church}
+                                  className={({ active }) =>
+                                    `cursor-pointer select-none p-2 ${active ? "bg-red-500 text-white" : "text-gray-900"
+                                    }`
+                                  }
+                                >
+                                  {church}
+                                </Combobox.Option>
+                              ))
+                            )}
+                          </Combobox.Options>
+                        </div>
+                      </Combobox>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="location" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <MapPin className="w-4 h-4 text-red-600" />
+                        Location *
+                      </Label>
+                      <Input
+                        id="location"
+                        value={formData.location}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
+                        placeholder="Enter location"
+                        disabled={isSubmitting}
+                        className="border-2 focus:border-red-500 transition-colors"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="language" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <BookOpen className="w-4 h-4 text-red-600" />
+                        Language of Quiz *
+                      </Label>
+                      <Select value={formData.langOfQuiz} onValueChange={(value) => handleInputChange('langOfQuiz', value)} disabled={isSubmitting}>
+                        <SelectTrigger className="border-2 focus:border-red-500">
+                          <SelectValue placeholder="Select language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="English">English</SelectItem>
+                          <SelectItem value="Marathi">Marathi</SelectItem>
+                          <SelectItem value="Tamil">Tamil</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="zone" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <Star className="w-4 h-4 text-red-600" />
+                        Your Zone *
+                      </Label>
+                      <Select value={formData.zone} onValueChange={(value) => handleInputChange('zone', value)} disabled={isSubmitting}>
+                        <SelectTrigger className="border-2 focus:border-red-500">
+                          <SelectValue placeholder="Select zone" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Centraline">Centraline Zone</SelectItem>
+                          <SelectItem value="North-Centraline">North-Centraline Zone</SelectItem>
+                          <SelectItem value="South">South Zone</SelectItem>
+                          <SelectItem value="East">East Zone</SelectItem>
+                          <SelectItem value="West">West Zone</SelectItem>
+                          <SelectItem value="Central">Central Zone</SelectItem>
+                          <SelectItem value="North">North Zone</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="contact" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <Phone className="w-4 h-4 text-red-600" />
+                        Contact Number *
+                      </Label>
+                      <Input
+                        id="contact"
+                        type="tel"
+                        value={formData.contactNo}
+                        onChange={(e) => handleInputChange('contactNo', e.target.value)}
+                        placeholder="Enter contact number"
+                        disabled={isSubmitting}
+                        className="border-2 focus:border-red-500 transition-colors"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="alternate" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <Phone className="w-4 h-4 text-red-600" />
+                        Alternate Number
+                      </Label>
+                      <Input
+                        id="alternate"
+                        type="tel"
+                        value={formData.alternateNo}
+                        onChange={(e) => handleInputChange('alternateNo', e.target.value)}
+                        placeholder="Enter alternate number"
+                        disabled={isSubmitting}
+                        className="border-2 focus:border-red-500 transition-colors"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <Mail className="w-4 h-4 text-red-600" />
+                        Email Address *
+                      </Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.mailId}
+                        onChange={(e) => handleInputChange('mailId', e.target.value)}
+                        placeholder="Enter email address"
+                        disabled={isSubmitting}
+                        className="border-2 focus:border-red-500 transition-colors"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Participants Section */}
+              <Card className="mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-red-600 rounded-lg">
+                        <Users className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl text-red-900">Participants Details</CardTitle>
+                        <CardDescription className="text-red-700">
+                          Write names as required on certificates (Minimum 2 participants required)
+                        </CardDescription>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="border-red-300 text-red-700">
+                      {filledParticipantCount}/8 Participants
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="mb-4 p-4 bg-gradient-to-r from-red-50 to-rose-50 rounded-lg border border-red-200">
+                    <div className="flex items-center gap-2 text-red-800 mb-2">
+                      <AlertCircle className="w-4 h-4" />
+                      <span className="font-semibold">Important Notes:</span>
+                    </div>
+                    <ul className="text-sm text-red-700 space-y-1">
+                      <li>• Participant 1 is automatically filled with Group Leader's details</li>
+                      <li>• Minimum 2 participants required for team registration</li>
+                      <li>• Maximum 8 participants allowed per team</li>
+                      <li>• Enter names exactly as you want them on certificates</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="overflow-x-auto">
+                    <div className="min-w-full">
+                      <div className="grid grid-cols-5 gap-4 mb-4 p-4 bg-gradient-to-r from-red-100 to-rose-100 rounded-lg">
+                        <div className="font-semibold text-red-900">No.</div>
+                        <div className="font-semibold text-red-900">Name *</div>
+                        <div className="font-semibold text-red-900">Gender *</div>
+                        <div className="font-semibold text-red-900">Date of Birth *</div>
+                        <div className="font-semibold text-red-900">Mobile Number</div>
+                      </div>
+
+                      {formData.participants.map((participant, index) => (
+                        <div key={index} className="grid grid-cols-5 gap-4 mb-4 p-4 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+                          <div className="flex items-center justify-center">
+                            <Badge 
+                              variant="secondary" 
+                              className={`w-8 h-8 flex items-center justify-center ${
+                                index === 0 
+                                  ? 'bg-red-600 text-white' 
+                                  : 'bg-red-100 text-red-700'
+                              }`}
+                            >
+                              {index + 1}
+                              {index === 0 && <Crown className="w-3 h-3 ml-1" />}
+                            </Badge>
+                          </div>
+
+                          <div className="relative">
+                            <Input
+                              value={participant.name}
+                              onChange={(e) => handleParticipantChange(index, 'name', e.target.value)}
+                              placeholder={index === 0 ? "Auto-filled from Group Leader" : "Enter name"}
+                              disabled={index === 0 || isSubmitting}
+                              className={`border-2 transition-colors ${
+                                index === 0 
+                                  ? 'bg-red-50 border-red-300 focus:border-red-400' 
+                                  : 'focus:border-red-500'
+                              }`}
+                            />
+                            {index === 0 && (
+                              <div className="absolute -top-2 -right-2">
+                                <Badge className="bg-red-600 text-white text-xs px-1">Leader</Badge>
+                              </div>
+                            )}
+                          </div>
+
+                          <Select
+                            value={participant.gender}
+                            onValueChange={(value) => handleParticipantChange(index, 'gender', value)}
+                            disabled={isSubmitting}
+                          >
+                            <SelectTrigger className="border-2 focus:border-red-500">
+                              <SelectValue placeholder="Gender" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Male">Male</SelectItem>
+                              <SelectItem value="Female">Female</SelectItem>
+                            </SelectContent>
+                          </Select>
+
+                          <Input
+                            type="date"
+                            value={participant.dob}
+                            onChange={(e) => handleParticipantChange(index, 'dob', e.target.value)}
+                            disabled={isSubmitting}
+                            className="border-2 focus:border-red-500 transition-colors"
+                          />
+
+                          <div className="relative">
+                            <Input
+                              type="tel"
+                              value={participant.mobileNo}
+                              onChange={(e) => handleParticipantChange(index, 'mobileNo', e.target.value)}
+                              placeholder={index === 0 ? "Auto-filled from Contact" : "Mobile number"}
+                              disabled={index === 0 || isSubmitting}
+                              className={`border-2 transition-colors ${
+                                index === 0 
+                                  ? 'bg-red-50 border-red-300 focus:border-red-400' 
+                                  : 'focus:border-red-500'
+                              }`}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {filledParticipantCount < 2 && (
+                        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          <div className="flex items-center gap-2 text-yellow-800">
+                            <AlertCircle className="w-4 h-4" />
+                            <span className="font-semibold">Minimum team size not met</span>
+                          </div>
+                          <p className="text-sm text-yellow-700 mt-1">
+                            You need at least 2 participants to form a team. Please add at least one more participant.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Email Verification Section */}
+              <Card className="mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-600 rounded-lg">
+                      <Shield className="w-5 h-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl text-red-900">Email Verification</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="verificationEmail" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                        <Mail className="w-4 h-4 text-red-600" />
+                        Verification Email Address *
+                      </Label>
+                      <div className="flex gap-2">
+                        <Input
+                          id="verificationEmail"
+                          type="email"
+                          value={verificationEmail}
+                          onChange={(e) => setVerificationEmail(e.target.value)}
+                          placeholder="Enter email for verification"
+                          disabled={isSubmitting || isOtpVerified}
+                          className="border-2 focus:border-red-500 transition-colors flex-1"
+                        />
+                        <Button
+                          onClick={sendOtp}
+                          disabled={otpLoading || isOtpVerified || isSubmitting}
+                          className="bg-red-600 hover:bg-red-700 text-white px-6"
+                        >
+                          {otpLoading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : isOtpVerified ? (
+                            <CheckCircle className="w-4 h-4" />
+                          ) : (
+                            <>
+                              <Send className="w-4 h-4 mr-2" />
+                              Send OTP
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+
+                    {isOtpSent && !isOtpVerified && (
+                      <div className="space-y-2">
+                        <Label htmlFor="otp" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                          <Shield className="w-4 h-4 text-red-600" />
+                          Enter OTP *
+                        </Label>
+                        <div className="flex gap-2">
+                          <div className="flex-1">
+                            <Input
+                              id="otp"
+                              value={otp}
+                              onChange={(e) => {
+                                setOtp(e.target.value);
+                                setOtpError(''); // Clear error when user starts typing
+                                if (message.type === 'error') {
+                                  setMessage({ type: '', text: '' });
+                                }
+                              }}
+                              placeholder="Enter 6-digit OTP"
+                              maxLength={6}
+                              disabled={isSubmitting}
+                              className={`border-2 transition-colors ${
+                                otpError 
+                                  ? 'border-red-400 focus:border-red-500 bg-red-50' 
+                                  : 'focus:border-red-500'
+                              }`}
+                            />
+                            {otpError && (
+                              <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+                                <AlertCircle className="w-3 h-3" />
+                                {otpError}
+                              </p>
+                            )}
+                          </div>
+                          <Button
+                            onClick={verifyOtp}
+                            disabled={isSubmitting || !otp.trim() || otpAttempts >= 3}
+                            className="bg-red-600 hover:bg-red-700 text-white px-6"
+                          >
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Verify
+                          </Button>
+                        </div>
+                        <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Mail className="w-4 h-4" />
+                            <span className="font-medium">OTP sent to {verificationEmail}</span>
+                          </div>
+                          <p>Check your inbox and spam folder. OTP expires in 10 minutes.</p>
+                          {otpAttempts > 0 && otpAttempts < 3 && (
+                            <p className="text-red-700 font-medium mt-1">
+                              ⚠️ {3 - otpAttempts} attempt{3 - otpAttempts > 1 ? 's' : ''} remaining
+                            </p>
+                          )}
+                          {otpAttempts >= 3 && (
+                            <div className="mt-2 p-2 bg-red-100 rounded border border-red-300">
+                              <p className="text-red-800 font-medium">
+                                🚫 Maximum attempts exceeded. Please request a new OTP.
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        {otpAttempts >= 3 && (
+                          <Button
+                            onClick={() => {
+                              setIsOtpSent(false);
+                              setOtp('');
+                              setOtpError('');
+                              setOtpAttempts(0);
+                              setGeneratedOtp('');
+                              setMessage({ type: '', text: '' });
+                            }}
+                            className="w-full bg-red-600 hover:bg-red-700 text-white"
+                          >
+                            <Send className="w-4 h-4 mr-2" />
+                            Request New OTP
+                          </Button>
+                        )}
+                      </div>
+                    )}
+
+                    {isOtpVerified && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 text-green-700">
+                          <CheckCircle className="w-5 h-5" />
+                          <span className="font-semibold">Email verified successfully!</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Declaration Section */}
+              <Card className="mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-600 rounded-lg">
+                      <Heart className="w-5 h-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl text-red-900">Declaration</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="space-y-6">
+                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
+                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
+                        <Crown className="w-4 h-4" />
+                        Declaration of Group Leader:
+                      </h4>
+                      <p className="text-red-800 leading-relaxed">
+                        I, <span className="font-semibold text-red-900">
+                          {formData.groupLeaderName || '[Please Enter the Group Leader Name in the beginning of the form]'}
+                        </span>, hereby declare that the above details are true as of my knowledge and belief.
+                        I hereby agree to follow the rules and regulations of Bible Quiz 2025. I understand that after form submission,
+                        I must print the PDF form, get proper signature from priest and church stamp, and mail it to cni.bdyfc@gmail.com
+                        for the registration to be complete.
+                      </p>
+                    </div>
+
+                    <Separator className="bg-red-200" />
+
+                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
+                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
+                        <Church className="w-4 h-4" />
+                        Declaration of Priest in Charge:
+                      </h4>
+                      <p className="text-red-800 leading-relaxed">
+                        I certify that the participants mentioned above are from the youth fellowship of my parish
+                        and the details provided above are genuine. I have verified their eligibility and approve
+                        their participation in Bible Quiz 2025.
+                      </p>
+                      <div className="mt-4 p-4 bg-white rounded border border-red-200">
+                        <p className="text-sm text-red-700 mb-2 font-semibold">
+                          Note: This section must be filled by the Priest and the form must be stamped with official church seal.
+                        </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-red-600">
+                          <div>
+                            <p>Priest Name: _________________________</p>
+                            <p className="mt-2">Signature: _________________________</p>
+                          </div>
+                          <div>
+                            <p>Date: _________________________</p>
+                            <p className="mt-2">Church Seal: [STAMP HERE]</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Submit Button */}
+              <div className="text-center">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting || !isOtpVerified}
+                  size="lg"
+                  className="w-full md:w-auto px-12 py-4 text-lg font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Submitting Registration...
+                    </>
+                  ) : (
+                    <>
+                      <BookOpen className="w-5 h-5 mr-2" />
+                      Submit Registration & Download Form
+                      <Download className="w-5 h-5 ml-2" />
+                    </>
+                  )}
+                </Button>
+                {!isOtpVerified && (
+                  <p className="text-sm text-red-600 mt-2">
+                    Please verify your email address before submitting
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BibleQuizRegistrationForm;

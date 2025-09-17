@@ -64,11 +64,10 @@ export default function TeamSection({
         cardHeight={380}
         cardRadius={20}
         showArrows={true}
-        showDots={true}
+        showDots={false}
         keyboardNavigation={true}
         touchNavigation={true}
         animationDuration={600}
-        autoPlay={5000}
         pauseOnHover={true}
         visibleCards={2}
         sideCardScale={0.9}

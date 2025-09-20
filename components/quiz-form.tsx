@@ -9,6 +9,22 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import {
+  Checkbox
+} from '@/components/ui/checkbox';
+import {
+  Calendar
+} from '@/components/ui/calendar';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/popover';
+import {
+  ChevronDownIcon,
+  CreditCard
+} from 'lucide-react';
+import { format } from 'date-fns';
+import {
   Button
 } from '@/components/ui/button';
 import {
@@ -55,6 +71,13 @@ import {
 } from 'lucide-react';
 import { Combobox } from "@headlessui/react";
 
+interface DatePickerProps {
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+  placeholder?: string;
+}
+
 interface Participant {
   name: string;
   gender: string;
@@ -100,6 +123,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [otpError, setOtpError] = useState('');
+  const [declarationAccepted, setDeclarationAccepted] = useState(false);
 
   const churches = [
     "Bethany Church, Mira Road",
@@ -295,6 +319,11 @@ const BibleQuizRegistrationForm: React.FC = () => {
       { field: 'contactNo', label: 'Contact number' },
       { field: 'mailId', label: 'Email address' }
     ];
+
+    if (!declarationAccepted) {
+      setMessage({ type: 'error', text: 'Please accept the declaration to proceed' });
+      return false;
+    }
 
     for (const { field, label } of requiredFields) {
       if (!formData[field as keyof FormData] || !String(formData[field as keyof FormData]).trim()) {
@@ -871,7 +900,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         <Crown className="w-4 h-4" />
                         Declaration of Group Leader:
                       </h4>
-                      <p className="text-red-800 leading-relaxed">
+                      <p className="text-red-800 leading-relaxed mb-4">
                         I, <span className="font-semibold text-red-900">
                           {formData.groupLeaderName || '[Please Enter the Group Leader Name in the beginning of the form]'}
                         </span>, hereby declare that the above details are true as of my knowledge and belief.
@@ -879,9 +908,29 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         I must print the PDF form, get proper signature from priest and church stamp, and mail it to cni.bdyfc@gmail.com
                         for the registration to be complete.
                       </p>
-                    </div>
 
-                    {/* <Separator className="bg-red-200" />
+                      <div className="flex items-start space-x-2 pt-4 border-t border-red-200">
+                        <Checkbox
+                          id="declaration"
+                          checked={declarationAccepted}
+                          onCheckedChange={checked => setDeclarationAccepted(checked === true)}
+                          disabled={isSubmitting}
+                          className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                        />
+                        <Label
+                          htmlFor="declaration"
+                          className="text-sm font-medium text-red-800 leading-relaxed cursor-pointer"
+                        >
+                          I confirm and accept the above declaration. I understand that providing false information
+                          will result in disqualification from the Bible Quiz.
+                        </Label>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* <Separator className="bg-red-200" />
 
                     <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
                       <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
@@ -909,9 +958,9 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         </div>
                       </div>
                     </div> */}
-                  </div>
-                </CardContent>
-              </Card>
+              {/* </div>
+          </CardContent>
+        </Card> */}
 
               {/* Email Verification Section */}
               <Card className="mb-8 border border-red-200 shadow-lg">
@@ -1051,11 +1100,84 @@ const BibleQuizRegistrationForm: React.FC = () => {
                 </CardContent>
               </Card>
 
+              {/* Bank Details Section */}
+              <Card className="mb-8 border border-green-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-green-600 rounded-lg">
+                      <CreditCard className="w-5 h-5 text-white" />
+                    </div>
+                    <CardTitle className="text-xl text-green-900">Payment Information</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200">
+                    <div className="flex items-center gap-2 mb-4">
+                      <CreditCard className="w-5 h-5 text-green-700" />
+                      <h4 className="font-semibold text-green-900 text-lg">Bank Account Details for Payment</h4>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-green-800">
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="font-medium">Account Name:</span>
+                          <span className="font-semibold">DIOCESAN YOUTH COUNCIL</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">Account Number:</span>
+                          <span className="font-mono font-semibold">415158092</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">IFSC Code:</span>
+                          <span className="font-mono font-semibold">IDIB000B027</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="font-medium">Bank Name & Address:</span>
+                          <span className="font-semibold">Indian Bank, Mumbai Fort (12) </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-medium">Registration Fee:</span>
+                          <span className="font-semibold text-green-700">₹1,000</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 p-4 bg-white rounded-lg border border-green-300">
+                      <h5 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4" />
+                        Payment Instructions:
+                      </h5>
+                      <ul className="space-y-2 text-sm text-green-800">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span>Make the payment using the above bank details</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span>Take a screenshot or download the payment receipt</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span>Attach the payment receipt along with the signed and stamped form when mailing to <strong>cni.bdyfc@gmail.com</strong></span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span>Registration will be confirmed only after receiving both the signed form and payment proof</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Submit Button */}
               <div className="text-center">
                 <Button
                   onClick={handleSubmit}
-                  disabled={isSubmitting || !isOtpVerified}
+                  disabled={isSubmitting || !isOtpVerified || !declarationAccepted}
                   size="lg"
                   className="w-full md:w-auto px-12 py-4 text-lg font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
@@ -1072,17 +1194,22 @@ const BibleQuizRegistrationForm: React.FC = () => {
                     </>
                   )}
                 </Button>
-                {!isOtpVerified && (
+                {(!isOtpVerified || !declarationAccepted) && (
                   <p className="text-sm text-red-600 mt-2">
-                    Please verify your email address before submitting
+                    {!isOtpVerified && !declarationAccepted
+                      ? "Please verify your email and accept the declaration before submitting"
+                      : !isOtpVerified
+                        ? "Please verify your email address before submitting"
+                        : "Please accept the declaration before submitting"
+                    }
                   </p>
                 )}
               </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
-    </div>
+        </div >
+      </div >
+    </div >
   );
 };
 

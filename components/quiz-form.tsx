@@ -461,61 +461,61 @@ const BibleQuizRegistrationForm: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-rose-50 to-pink-50">
       {/* Decorative Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 text-red-200 opacity-20">
-          <Cross size={120} />
+        <div className="absolute top-10 sm:top-20 left-4 sm:left-10 text-red-200 opacity-20">
+          <Cross size={80} className="sm:w-[120px] sm:h-[120px]" />
         </div>
-        <div className="absolute bottom-40 left-20 text-red-200 opacity-20">
-          <BookOpen size={80} />
+        <div className="absolute bottom-32 sm:bottom-40 left-8 sm:left-20 text-red-200 opacity-20">
+          <BookOpen size={60} className="sm:w-[80px] sm:h-[80px]" />
         </div>
-        <div className="absolute bottom-20 right-40 text-red-200 opacity-15">
-          <Heart size={90} />
+        <div className="absolute bottom-16 sm:bottom-20 right-8 sm:right-40 text-red-200 opacity-15">
+          <Heart size={70} className="sm:w-[90px] sm:h-[90px]" />
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 relative">
-        <div className="max-w-5xl mx-auto">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8 relative">
+        <div className="max-w-7xl mx-auto">
 
           {/* Stunning Header */}
-          <div className="text-center mb-12">
-            <div className="relative mb-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <div className="relative mb-6 sm:mb-8">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-32 h-32 bg-gradient-to-r from-red-400 to-rose-500 rounded-full opacity-20 blur-xl"></div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-r from-red-400 to-rose-500 rounded-full opacity-20 blur-xl"></div>
               </div>
-              <div className="relative flex items-center justify-center gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-r from-red-500 to-rose-500 rounded-full shadow-lg">
-                  <BookOpen className="w-8 h-8 text-white" />
+              <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <div className="p-2 sm:p-3 bg-gradient-to-r from-red-500 to-rose-500 rounded-full shadow-lg">
+                  <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-600 via-rose-600 to-red-800 bg-clip-text text-transparent">
+                <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-600 via-rose-600 to-red-800 bg-clip-text text-transparent text-center">
                   BDYFC Bible Quiz 2025
                 </h1>
-                <div className="p-3 bg-gradient-to-r from-rose-500 to-red-500 rounded-full shadow-lg">
-                  <Crown className="w-8 h-8 text-white" />
+                <div className="p-2 sm:p-3 bg-gradient-to-r from-rose-500 to-red-500 rounded-full shadow-lg">
+                  <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Sparkles className="w-5 h-5 text-red-500" />
-              <p className="text-xl font-medium text-gray-700">
+            <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4 px-2">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0" />
+              <p className="text-base sm:text-xl font-medium text-gray-700 text-center">
                 "Let the word of Christ dwell in you richly in all wisdom"
               </p>
-              <Sparkles className="w-5 h-5 text-red-500" />
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 flex-shrink-0" />
             </div>
-            <p className="text-gray-600 text-lg">Colossians 3:16</p>
+            <p className="text-gray-600 text-sm sm:text-lg">Colossians 3:16</p>
           </div>
 
           {/* Message Display */}
           {message.text && (
-            <Alert className={`mb-8 border-2 ${message.type === 'error'
+            <Alert className={`mb-6 sm:mb-8 border-2 ${message.type === 'error'
               ? 'border-red-300 bg-red-50 text-red-700'
               : 'border-green-200 bg-green-50 text-green-700'
               }`}>
               <div className="flex items-center gap-2">
                 {message.type === 'error' ?
-                  <AlertCircle className="w-5 h-5" /> :
-                  <CheckCircle className="w-5 h-5" />
+                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" /> :
+                  <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                 }
-                <AlertDescription className="text-sm font-medium">
+                <AlertDescription className="text-xs sm:text-sm font-medium">
                   {message.text}
                 </AlertDescription>
               </div>
@@ -524,53 +524,53 @@ const BibleQuizRegistrationForm: React.FC = () => {
 
           {/* Registration Form */}
           <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-t-lg">
-              <div className="flex items-center gap-3">
+            <CardHeader className="bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-t-lg p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <div className="p-2 bg-white/20 rounded-lg">
-                  <BookOpen className="w-6 h-6" />
+                  <BookOpen className="w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl font-bold">Registration Form</CardTitle>
-                  <CardDescription className="text-red-100">
+                  <CardTitle className="text-xl sm:text-2xl font-bold">Registration Form</CardTitle>
+                  <CardDescription className="text-red-100 text-sm sm:text-base">
                     Fill in your details to participate in the BDYFC Bible Quiz 2025
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
 
-            <CardContent className="p-8">
+            <CardContent className="p-4 sm:p-6 lg:p-8">
 
               {/* Instructions Section */}
-              <Card className="mb-8 border border-red-200 shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
-                  <div className="flex items-center gap-3">
+              <Card className="mb-6 sm:mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50 p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div className="p-2 bg-red-600 rounded-lg">
-                      <AlertCircle className="w-5 h-5 text-white" />
+                      <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <CardTitle className="text-xl text-red-900">Important Instructions</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-red-900">Important Instructions</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
-                    <ul className="space-y-3 text-red-800">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="bg-gradient-to-r from-red-50 to-rose-50 p-4 sm:p-6 rounded-lg border border-red-200">
+                    <ul className="space-y-2 sm:space-y-3 text-red-800 text-sm sm:text-base">
                       <li className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 mt-1 flex-shrink-0" />
                         <span>After form submission, you will receive a confirmation email with a PDF form.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 mt-1 flex-shrink-0" />
                         <span>Print the PDF form and get proper signature from your priest and official stamp of the church.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 mt-1 flex-shrink-0" />
                         <span>Mail the signed and stamped form to: <strong>cni.bdyfc@gmail.com</strong></span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 mt-1 flex-shrink-0" />
                         <span>Your registration will only be complete after we receive the signed form.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <CheckCircle className="w-4 h-4 text-red-600 mt-1 flex-shrink-0" />
+                        <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600 mt-1 flex-shrink-0" />
                         <span>Write participant names exactly as you want them on certificates.</span>
                       </li>
                     </ul>
@@ -579,21 +579,21 @@ const BibleQuizRegistrationForm: React.FC = () => {
               </Card>
 
               {/* Group Leader Details Section */}
-              <Card className="mb-8 border border-red-200 shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
-                  <div className="flex items-center gap-3">
+              <Card className="mb-6 sm:mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50 p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div className="p-2 bg-red-600 rounded-lg">
-                      <Crown className="w-5 h-5 text-white" />
+                      <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <CardTitle className="text-xl text-red-900">Group Leader Details</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-red-900">Group Leader Details</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
 
                     <div className="space-y-2">
                       <Label htmlFor="groupLeader" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Crown className="w-4 h-4 text-red-600" />
+                        <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Group Leader Name *
                       </Label>
                       <Input
@@ -602,13 +602,13 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         onChange={(e) => handleInputChange('groupLeaderName', e.target.value)}
                         placeholder="Enter group leader name"
                         disabled={isSubmitting}
-                        className="border-2 focus:border-red-500 transition-colors"
+                        className="border-2 focus:border-red-500 transition-colors text-sm sm:text-base"
                       />
                     </div>
 
                     <div className="space-y-2">
                       <label htmlFor="church" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Church className="w-4 h-4 text-red-600" />
+                        <Church className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Church *
                       </label>
 
@@ -619,14 +619,14 @@ const BibleQuizRegistrationForm: React.FC = () => {
                       >
                         <div className="relative">
                           <Combobox.Input
-                            className="w-full border-2 p-2 rounded focus:border-red-500"
+                            className="w-full border-2 p-2 rounded focus:border-red-500 text-sm sm:text-base"
                             placeholder="Select Church"
                             onChange={(event) => setQuery(event.target.value)}
                             displayValue={(church) => (church as string)}
                           />
                           <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                             {filteredChurches.length === 0 ? (
-                              <div className="cursor-default select-none p-2 text-gray-500">
+                              <div className="cursor-default select-none p-2 text-gray-500 text-sm">
                                 No churches found.
                               </div>
                             ) : (
@@ -635,7 +635,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                                   key={church}
                                   value={church}
                                   className={({ active }) =>
-                                    `cursor-pointer select-none p-2 ${active ? "bg-red-500 text-white" : "text-gray-900"
+                                    `cursor-pointer select-none p-2 text-sm ${active ? "bg-red-500 text-white" : "text-gray-900"
                                     }`
                                   }
                                 >
@@ -650,7 +650,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
 
                     <div className="space-y-2">
                       <Label htmlFor="location" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <MapPin className="w-4 h-4 text-red-600" />
+                        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Location *
                       </Label>
                       <Input
@@ -659,17 +659,17 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         onChange={(e) => handleInputChange('location', e.target.value)}
                         placeholder="Enter location"
                         disabled={isSubmitting}
-                        className="border-2 focus:border-red-500 transition-colors"
+                        className="border-2 focus:border-red-500 transition-colors text-sm sm:text-base"
                       />
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="language" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <BookOpen className="w-4 h-4 text-red-600" />
+                        <BookOpen className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Language of Quiz *
                       </Label>
                       <Select value={formData.langOfQuiz} onValueChange={(value) => handleInputChange('langOfQuiz', value)} disabled={isSubmitting}>
-                        <SelectTrigger className="border-2 focus:border-red-500">
+                        <SelectTrigger className="border-2 focus:border-red-500 text-sm sm:text-base">
                           <SelectValue placeholder="Select language" />
                         </SelectTrigger>
                         <SelectContent>
@@ -682,11 +682,11 @@ const BibleQuizRegistrationForm: React.FC = () => {
 
                     <div className="space-y-2">
                       <Label htmlFor="zone" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Star className="w-4 h-4 text-red-600" />
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Your Zone *
                       </Label>
                       <Select value={formData.zone} onValueChange={(value) => handleInputChange('zone', value)} disabled={isSubmitting}>
-                        <SelectTrigger className="border-2 focus:border-red-500">
+                        <SelectTrigger className="border-2 focus:border-red-500 text-sm sm:text-base">
                           <SelectValue placeholder="Select zone" />
                         </SelectTrigger>
                         <SelectContent>
@@ -703,7 +703,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
 
                     <div className="space-y-2">
                       <Label htmlFor="contact" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Phone className="w-4 h-4 text-red-600" />
+                        <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Contact Number *
                       </Label>
                       <Input
@@ -713,13 +713,13 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         onChange={(e) => handleInputChange('contactNo', e.target.value)}
                         placeholder="Enter contact number"
                         disabled={isSubmitting}
-                        className="border-2 focus:border-red-500 transition-colors"
+                        className="border-2 focus:border-red-500 transition-colors text-sm sm:text-base"
                       />
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="alternate" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Phone className="w-4 h-4 text-red-600" />
+                        <Phone className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Alternate Number
                       </Label>
                       <Input
@@ -729,13 +729,13 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         onChange={(e) => handleInputChange('alternateNo', e.target.value)}
                         placeholder="Enter alternate number"
                         disabled={isSubmitting}
-                        className="border-2 focus:border-red-500 transition-colors"
+                        className="border-2 focus:border-red-500 transition-colors text-sm sm:text-base"
                       />
                     </div>
 
                     <div className="space-y-2">
                       <Label htmlFor="email" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Mail className="w-4 h-4 text-red-600" />
+                        <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Email Address *
                       </Label>
                       <Input
@@ -745,7 +745,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                         onChange={(e) => handleInputChange('mailId', e.target.value)}
                         placeholder="Enter email address"
                         disabled={isSubmitting}
-                        className="border-2 focus:border-red-500 transition-colors"
+                        className="border-2 focus:border-red-500 transition-colors text-sm sm:text-base"
                       />
                     </div>
                   </div>
@@ -753,32 +753,32 @@ const BibleQuizRegistrationForm: React.FC = () => {
               </Card>
 
               {/* Participants Section */}
-              <Card className="mb-8 border border-red-200 shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
-                  <div className="flex items-center justify-between">
+              <Card className="mb-6 sm:mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50 p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-red-600 rounded-lg">
-                        <Users className="w-5 h-5 text-white" />
+                        <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                       </div>
                       <div>
-                        <CardTitle className="text-xl text-red-900">Participants Details</CardTitle>
-                        <CardDescription className="text-red-700">
+                        <CardTitle className="text-lg sm:text-xl text-red-900">Participants Details</CardTitle>
+                        <CardDescription className="text-red-700 text-sm">
                           Write names as required on certificates (Minimum 2 participants required)
                         </CardDescription>
                       </div>
                     </div>
-                    <Badge variant="outline" className="border-red-300 text-red-700">
+                    <Badge variant="outline" className="border-red-300 text-red-700 text-xs sm:text-sm">
                       {filledParticipantCount}/8 Participants
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="mb-4 p-4 bg-gradient-to-r from-red-50 to-rose-50 rounded-lg border border-red-200">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="mb-4 p-3 sm:p-4 bg-gradient-to-r from-red-50 to-rose-50 rounded-lg border border-red-200">
                     <div className="flex items-center gap-2 text-red-800 mb-2">
-                      <AlertCircle className="w-4 h-4" />
-                      <span className="font-semibold">Important Notes:</span>
+                      <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                      <span className="font-semibold text-sm sm:text-base">Important Notes:</span>
                     </div>
-                    <ul className="text-sm text-red-700 space-y-1">
+                    <ul className="text-xs sm:text-sm text-red-700 space-y-1">
                       <li>• Participant 1 is automatically filled with Group Leader's details</li>
                       <li>• Minimum 2 participants required for team registration</li>
                       <li>• Maximum 8 participants allowed per team</li>
@@ -786,9 +786,92 @@ const BibleQuizRegistrationForm: React.FC = () => {
                     </ul>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  {/* Mobile view - stacked layout */}
+                  <div className="block sm:hidden space-y-4">
+                    {formData.participants.map((participant, index) => (
+                      <div key={index} className="p-3 border border-red-200 rounded-lg bg-white">
+                        <div className="flex items-center justify-between mb-3">
+                          <Badge
+                            variant="secondary"
+                            className={`flex items-center justify-center px-2 py-1 ${index === 0
+                              ? 'bg-red-600 text-white'
+                              : 'bg-red-100 text-red-700'
+                              }`}
+                          >
+                            {index + 1}
+                            {index === 0 && <Crown className="w-3 h-3 ml-1" />}
+                          </Badge>
+                          {index === 0 && (
+                            <Badge className="bg-red-600 text-white text-xs px-2 py-1">Leader</Badge>
+                          )}
+                        </div>
+
+                        <div className="space-y-3">
+                          <div>
+                            <Label className="text-xs font-semibold text-gray-600">Name *</Label>
+                            <Input
+                              value={participant.name}
+                              onChange={(e) => handleParticipantChange(index, 'name', e.target.value)}
+                              placeholder={index === 0 ? "Auto-filled from Group Leader" : "Enter name"}
+                              disabled={index === 0 || isSubmitting}
+                              className={`border-2 transition-colors text-sm ${index === 0
+                                ? 'bg-red-50 border-red-300 focus:border-red-400'
+                                : 'focus:border-red-500'
+                                }`}
+                            />
+                          </div>
+
+                          <div>
+                            <Label className="text-xs font-semibold text-gray-600">Gender *</Label>
+                            <Select
+                              value={participant.gender}
+                              onValueChange={(value) => handleParticipantChange(index, 'gender', value)}
+                              disabled={isSubmitting}
+                            >
+                              <SelectTrigger className="border-2 focus:border-red-500 text-sm">
+                                <SelectValue placeholder="Gender" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Male">Male</SelectItem>
+                                <SelectItem value="Female">Female</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div>
+                            <Label className="text-xs font-semibold text-gray-600">Date of Birth *</Label>
+                            <Input
+                              type="date"
+                              value={participant.dob}
+                              onChange={(e) => handleParticipantChange(index, 'dob', e.target.value)}
+                              disabled={isSubmitting}
+                              className="border-2 focus:border-red-500 transition-colors text-sm"
+                            />
+                          </div>
+
+                          <div>
+                            <Label className="text-xs font-semibold text-gray-600">Mobile Number</Label>
+                            <Input
+                              type="tel"
+                              value={participant.mobileNo}
+                              onChange={(e) => handleParticipantChange(index, 'mobileNo', e.target.value)}
+                              placeholder={index === 0 ? "Auto-filled from Contact" : "Mobile number"}
+                              disabled={index === 0 || isSubmitting}
+                              className={`border-2 transition-colors text-sm ${index === 0
+                                ? 'bg-red-50 border-red-300 focus:border-red-400'
+                                : 'focus:border-red-500'
+                                }`}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop/Tablet view - table layout */}
+                  <div className="hidden sm:block overflow-x-auto">
                     <div className="min-w-full">
-                      <div className="grid grid-cols-5 gap-4 mb-4 p-4 bg-gradient-to-r from-red-100 to-rose-100 rounded-lg">
+                      <div className="grid grid-cols-5 gap-2 lg:gap-4 mb-4 p-3 sm:p-4 bg-gradient-to-r from-red-100 to-rose-100 rounded-lg text-sm lg:text-base">
                         <div className="font-semibold text-red-900">No.</div>
                         <div className="font-semibold text-red-900">Name *</div>
                         <div className="font-semibold text-red-900">Gender *</div>
@@ -797,17 +880,17 @@ const BibleQuizRegistrationForm: React.FC = () => {
                       </div>
 
                       {formData.participants.map((participant, index) => (
-                        <div key={index} className="grid grid-cols-5 gap-4 mb-4 p-4 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
+                        <div key={index} className="grid grid-cols-5 gap-2 lg:gap-4 mb-4 p-3 sm:p-4 border border-red-200 rounded-lg hover:bg-red-50 transition-colors">
                           <div className="flex items-center justify-center">
                             <Badge
                               variant="secondary"
-                              className={`w-8 h-8 flex items-center justify-center ${index === 0
+                              className={`w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-xs ${index === 0
                                 ? 'bg-red-600 text-white'
                                 : 'bg-red-100 text-red-700'
                                 }`}
                             >
                               {index + 1}
-                              {index === 0 && <Crown className="w-3 h-3 ml-1" />}
+                              {index === 0 && <Crown className="w-2 h-2 sm:w-3 sm:h-3 ml-1" />}
                             </Badge>
                           </div>
 
@@ -817,7 +900,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                               onChange={(e) => handleParticipantChange(index, 'name', e.target.value)}
                               placeholder={index === 0 ? "Auto-filled from Group Leader" : "Enter name"}
                               disabled={index === 0 || isSubmitting}
-                              className={`border-2 transition-colors ${index === 0
+                              className={`border-2 transition-colors text-xs sm:text-sm ${index === 0
                                 ? 'bg-red-50 border-red-300 focus:border-red-400'
                                 : 'focus:border-red-500'
                                 }`}
@@ -834,7 +917,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                             onValueChange={(value) => handleParticipantChange(index, 'gender', value)}
                             disabled={isSubmitting}
                           >
-                            <SelectTrigger className="border-2 focus:border-red-500">
+                            <SelectTrigger className="border-2 focus:border-red-500 text-xs sm:text-sm">
                               <SelectValue placeholder="Gender" />
                             </SelectTrigger>
                             <SelectContent>
@@ -848,7 +931,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                             value={participant.dob}
                             onChange={(e) => handleParticipantChange(index, 'dob', e.target.value)}
                             disabled={isSubmitting}
-                            className="border-2 focus:border-red-500 transition-colors"
+                            className="border-2 focus:border-red-500 transition-colors text-xs sm:text-sm"
                           />
 
                           <div className="relative">
@@ -858,7 +941,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
                               onChange={(e) => handleParticipantChange(index, 'mobileNo', e.target.value)}
                               placeholder={index === 0 ? "Auto-filled from Contact" : "Mobile number"}
                               disabled={index === 0 || isSubmitting}
-                              className={`border-2 transition-colors ${index === 0
+                              className={`border-2 transition-colors text-xs sm:text-sm ${index === 0
                                 ? 'bg-red-50 border-red-300 focus:border-red-400'
                                 : 'focus:border-red-500'
                                 }`}
@@ -866,41 +949,41 @@ const BibleQuizRegistrationForm: React.FC = () => {
                           </div>
                         </div>
                       ))}
-
-                      {filledParticipantCount < 2 && (
-                        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                          <div className="flex items-center gap-2 text-yellow-800">
-                            <AlertCircle className="w-4 h-4" />
-                            <span className="font-semibold">Minimum team size not met</span>
-                          </div>
-                          <p className="text-sm text-yellow-700 mt-1">
-                            You need at least 2 participants to form a team. Please add at least one more participant.
-                          </p>
-                        </div>
-                      )}
                     </div>
                   </div>
+
+                  {filledParticipantCount < 2 && (
+                    <div className="mt-4 p-3 sm:p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <div className="flex items-center gap-2 text-yellow-800">
+                        <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                        <span className="font-semibold text-sm sm:text-base">Minimum team size not met</span>
+                      </div>
+                      <p className="text-xs sm:text-sm text-yellow-700 mt-1">
+                        You need at least 2 participants to form a team. Please add at least one more participant.
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
               {/* Declaration Section */}
-              <Card className="mb-8 border border-red-200 shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
-                  <div className="flex items-center gap-3">
+              <Card className="mb-6 sm:mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50 p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div className="p-2 bg-red-600 rounded-lg">
-                      <Heart className="w-5 h-5 text-white" />
+                      <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <CardTitle className="text-xl text-red-900">Declaration</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-red-900">Declaration</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-6">
-                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
-                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
-                        <Crown className="w-4 h-4" />
+                <CardContent className="p-4 sm:p-6">
+                  <div className="space-y-4 sm:space-y-6">
+                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-4 sm:p-6 rounded-lg border border-red-200">
+                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2 text-sm sm:text-base">
+                        <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
                         Declaration of Group Leader:
                       </h4>
-                      <p className="text-red-800 leading-relaxed mb-4">
+                      <p className="text-red-800 leading-relaxed mb-4 text-sm sm:text-base">
                         I, <span className="font-semibold text-red-900">
                           {formData.groupLeaderName || '[Please Enter the Group Leader Name in the beginning of the form]'}
                         </span>, hereby declare that the above details are true as of my knowledge and belief.
@@ -915,11 +998,11 @@ const BibleQuizRegistrationForm: React.FC = () => {
                           checked={declarationAccepted}
                           onCheckedChange={checked => setDeclarationAccepted(checked === true)}
                           disabled={isSubmitting}
-                          className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600"
+                          className="data-[state=checked]:bg-red-600 data-[state=checked]:border-red-600 mt-1"
                         />
                         <Label
                           htmlFor="declaration"
-                          className="text-sm font-medium text-red-800 leading-relaxed cursor-pointer"
+                          className="text-xs sm:text-sm font-medium text-red-800 leading-relaxed cursor-pointer"
                         >
                           I confirm and accept the above declaration. I understand that providing false information
                           will result in disqualification from the Bible Quiz.
@@ -930,56 +1013,24 @@ const BibleQuizRegistrationForm: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* <Separator className="bg-red-200" />
-
-                    <div className="bg-gradient-to-r from-red-50 to-rose-50 p-6 rounded-lg border border-red-200">
-                      <h4 className="font-semibold text-red-900 mb-3 flex items-center gap-2">
-                        <Church className="w-4 h-4" />
-                        Declaration of Priest in Charge:
-                      </h4>
-                      <p className="text-red-800 leading-relaxed">
-                        I certify that the participants mentioned above are from the youth fellowship of my parish
-                        and the details provided above are genuine. I have verified their eligibility and approve
-                        their participation in BDYFC Bible Quiz 2025.
-                      </p>
-                      <div className="mt-4 p-4 bg-white rounded border border-red-200">
-                        <p className="text-sm text-red-700 mb-2 font-semibold">
-                          Note: This section must be filled by the Priest and the form must be stamped with official church seal.
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-red-600">
-                          <div>
-                            <p>Priest Name: _________________________</p>
-                            <p className="mt-2">Signature: _________________________</p>
-                          </div>
-                          <div>
-                            <p>Date: _________________________</p>
-                            <p className="mt-2">Church Seal: [STAMP HERE]</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div> */}
-              {/* </div>
-          </CardContent>
-        </Card> */}
-
               {/* Email Verification Section */}
-              <Card className="mb-8 border border-red-200 shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50">
-                  <div className="flex items-center gap-3">
+              <Card className="mb-6 sm:mb-8 border border-red-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-red-50 to-rose-50 p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div className="p-2 bg-red-600 rounded-lg">
-                      <Shield className="w-5 h-5 text-white" />
+                      <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <CardTitle className="text-xl text-red-900">Email Verification</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-red-900">Email Verification</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="verificationEmail" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Mail className="w-4 h-4 text-red-600" />
+                        <Mail className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                         Verification Email Address *
                       </Label>
-                      <div className="flex gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <Input
                           id="verificationEmail"
                           type="email"
@@ -987,21 +1038,22 @@ const BibleQuizRegistrationForm: React.FC = () => {
                           onChange={(e) => setVerificationEmail(e.target.value)}
                           placeholder="Enter email for verification"
                           disabled={isSubmitting || isOtpVerified}
-                          className="border-2 focus:border-red-500 transition-colors flex-1"
+                          className="border-2 focus:border-red-500 transition-colors flex-1 text-sm sm:text-base"
                         />
                         <Button
                           onClick={sendOtp}
                           disabled={otpLoading || isOtpVerified || isSubmitting}
-                          className="bg-red-600 hover:bg-red-700 text-white px-6"
+                          className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 text-sm sm:text-base"
                         >
                           {otpLoading ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
                           ) : isOtpVerified ? (
-                            <CheckCircle className="w-4 h-4" />
+                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           ) : (
                             <>
-                              <Send className="w-4 h-4 mr-2" />
-                              Send OTP
+                              <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                              <span className="hidden sm:inline">Send OTP</span>
+                              <span className="sm:hidden">Send</span>
                             </>
                           )}
                         </Button>
@@ -1011,10 +1063,10 @@ const BibleQuizRegistrationForm: React.FC = () => {
                     {isOtpSent && !isOtpVerified && (
                       <div className="space-y-2">
                         <Label htmlFor="otp" className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                          <Shield className="w-4 h-4 text-red-600" />
+                          <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                           Enter OTP *
                         </Label>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2">
                           <div className="flex-1">
                             <Input
                               id="otp"
@@ -1029,13 +1081,13 @@ const BibleQuizRegistrationForm: React.FC = () => {
                               placeholder="Enter 6-digit OTP"
                               maxLength={6}
                               disabled={isSubmitting}
-                              className={`border-2 transition-colors ${otpError
+                              className={`border-2 transition-colors text-sm sm:text-base ${otpError
                                 ? 'border-red-400 focus:border-red-500 bg-red-50'
                                 : 'focus:border-red-500'
                                 }`}
                             />
                             {otpError && (
-                              <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+                              <p className="text-xs sm:text-sm text-red-600 mt-1 flex items-center gap-1">
                                 <AlertCircle className="w-3 h-3" />
                                 {otpError}
                               </p>
@@ -1044,15 +1096,15 @@ const BibleQuizRegistrationForm: React.FC = () => {
                           <Button
                             onClick={verifyOtp}
                             disabled={isSubmitting || !otp.trim() || otpAttempts >= 3}
-                            className="bg-red-600 hover:bg-red-700 text-white px-6"
+                            className="bg-red-600 hover:bg-red-700 text-white px-4 sm:px-6 text-sm sm:text-base"
                           >
-                            <CheckCircle className="w-4 h-4 mr-2" />
+                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                             Verify
                           </Button>
                         </div>
-                        <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
+                        <div className="text-xs sm:text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
                           <div className="flex items-center gap-2 mb-1">
-                            <Mail className="w-4 h-4" />
+                            <Mail className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                             <span className="font-medium">OTP sent to {verificationEmail}</span>
                           </div>
                           <p>Check your inbox and spam folder. OTP expires in 10 minutes.</p>
@@ -1079,9 +1131,9 @@ const BibleQuizRegistrationForm: React.FC = () => {
                               setGeneratedOtp('');
                               setMessage({ type: '', text: '' });
                             }}
-                            className="w-full bg-red-600 hover:bg-red-700 text-white"
+                            className="w-full bg-red-600 hover:bg-red-700 text-white text-sm sm:text-base"
                           >
-                            <Send className="w-4 h-4 mr-2" />
+                            <Send className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                             Request New OTP
                           </Button>
                         )}
@@ -1089,10 +1141,10 @@ const BibleQuizRegistrationForm: React.FC = () => {
                     )}
 
                     {isOtpVerified && (
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4">
                         <div className="flex items-center gap-2 text-green-700">
-                          <CheckCircle className="w-5 h-5" />
-                          <span className="font-semibold">Email verified successfully!</span>
+                          <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                          <span className="font-semibold text-sm sm:text-base">Email verified successfully!</span>
                         </div>
                       </div>
                     )}
@@ -1101,70 +1153,70 @@ const BibleQuizRegistrationForm: React.FC = () => {
               </Card>
 
               {/* Bank Details Section */}
-              <Card className="mb-8 border border-green-200 shadow-lg">
-                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
-                  <div className="flex items-center gap-3">
+              <Card className="mb-6 sm:mb-8 border border-green-200 shadow-lg">
+                <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div className="p-2 bg-green-600 rounded-lg">
-                      <CreditCard className="w-5 h-5 text-white" />
+                      <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                     </div>
-                    <CardTitle className="text-xl text-green-900">Payment Information</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl text-green-900">Payment Information</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg border border-green-200">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 sm:p-6 rounded-lg border border-green-200">
                     <div className="flex items-center gap-2 mb-4">
-                      <CreditCard className="w-5 h-5 text-green-700" />
-                      <h4 className="font-semibold text-green-900 text-lg">Bank Account Details for Payment</h4>
+                      <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-green-700" />
+                      <h4 className="font-semibold text-green-900 text-base sm:text-lg">Bank Account Details for Payment</h4>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-green-800">
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 text-green-800 text-sm sm:text-base">
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                           <span className="font-medium">Account Name:</span>
                           <span className="font-semibold">DIOCESAN YOUTH COUNCIL</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                           <span className="font-medium">Account Number:</span>
                           <span className="font-mono font-semibold">415158092</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                           <span className="font-medium">IFSC Code:</span>
                           <span className="font-mono font-semibold">IDIB000B027</span>
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                           <span className="font-medium">Bank Name & Address:</span>
-                          <span className="font-semibold">Indian Bank, Mumbai Fort (12) </span>
+                          <span className="font-semibold">Indian Bank, Mumbai Fort (12)</span>
                         </div>
-                        <div className="flex justify-between">
+                        <div className="flex flex-col sm:flex-row sm:justify-between gap-1">
                           <span className="font-medium">Registration Fee:</span>
-                          <span className="font-semibold text-green-700">₹1,000</span>
+                          <span className="font-semibold text-green-700 text-lg">₹1,000</span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-6 p-4 bg-white rounded-lg border border-green-300">
-                      <h5 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
-                        <AlertCircle className="w-4 h-4" />
+                    <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-white rounded-lg border border-green-300">
+                      <h5 className="font-semibold text-green-900 mb-2 flex items-center gap-2 text-sm sm:text-base">
+                        <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                         Payment Instructions:
                       </h5>
-                      <ul className="space-y-2 text-sm text-green-800">
+                      <ul className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-green-800">
                         <li className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 mt-0.5 flex-shrink-0" />
                           <span>Make the payment using the above bank details</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 mt-0.5 flex-shrink-0" />
                           <span>Take a screenshot or download the payment receipt</span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 mt-0.5 flex-shrink-0" />
                           <span>Attach the payment receipt along with the signed and stamped form when mailing to <strong>cni.bdyfc@gmail.com</strong></span>
                         </li>
                         <li className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600 mt-0.5 flex-shrink-0" />
                           <span>Registration will be confirmed only after receiving both the signed form and payment proof</span>
                         </li>
                       </ul>
@@ -1179,23 +1231,24 @@ const BibleQuizRegistrationForm: React.FC = () => {
                   onClick={handleSubmit}
                   disabled={isSubmitting || !isOtpVerified || !declarationAccepted}
                   size="lg"
-                  className="w-full md:w-auto px-12 py-4 text-lg font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  className="w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 text-base sm:text-lg font-semibold bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Submitting Registration...
+                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" />
+                      <span className="text-sm sm:text-base">Submitting Registration...</span>
                     </>
                   ) : (
                     <>
-                      <BookOpen className="w-5 h-5 mr-2" />
-                      Submit Registration & Download Form
-                      <Download className="w-5 h-5 ml-2" />
+                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                      <span className="hidden sm:inline">Submit Registration & Download Form</span>
+                      <span className="sm:hidden">Submit & Download</span>
+                      <Download className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
                     </>
                   )}
                 </Button>
                 {(!isOtpVerified || !declarationAccepted) && (
-                  <p className="text-sm text-red-600 mt-2">
+                  <p className="text-xs sm:text-sm text-red-600 mt-2 px-2">
                     {!isOtpVerified && !declarationAccepted
                       ? "Please verify your email and accept the declaration before submitting"
                       : !isOtpVerified
@@ -1207,9 +1260,9 @@ const BibleQuizRegistrationForm: React.FC = () => {
               </div>
             </CardContent>
           </Card>
-        </div >
-      </div >
-    </div >
+        </div>
+      </div>
+    </div>
   );
 };
 

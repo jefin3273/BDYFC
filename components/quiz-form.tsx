@@ -143,6 +143,7 @@ const BibleQuizRegistrationForm: React.FC = () => {
     "Jubilee Malayalam Church",
     "Jubilee Marathi Church",
     "Jubilee Tamil Church",
+    "St.Philip's Tamil Church, CNI. Vasai",
     "Khrista Prakash Church",
     "St. Francis Church (Old)",
     "St. Francis Church (New)",

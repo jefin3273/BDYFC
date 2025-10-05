@@ -536,23 +536,27 @@ async function getNextGroupNumber(): Promise<string> {
     .from('bible_quiz_registrations_2025')
     .select('group_number')
     .order('group_number', { ascending: false })
-    .limit(1);
+    .limit(100);  // Get more rows to sort properly
 
   if (error) {
     console.error('Error getting last group number:', error);
-    return '1'; // Default first group number
+    return '1';
   }
 
   if (!data || data.length === 0) {
-    return '1'; // First registration
+    return '1';
   }
 
-  const lastGroupNumber = data[0].group_number;
-  const lastNumber = parseInt(lastGroupNumber);  // No substring needed
+  // Sort numerically in JavaScript since SQL sorts as strings
+  const numbers = data
+    .map(row => parseInt(row.group_number))
+    .filter(num => !isNaN(num))
+    .sort((a, b) => b - a);  // Descending numeric sort
+
+  const lastNumber = numbers[0] || 0;
   const nextNumber = lastNumber + 1;
 
-  return nextNumber.toString();  // Just the number as string
-
+  return nextNumber.toString();
 }
 
 export async function POST(request: NextRequest) {

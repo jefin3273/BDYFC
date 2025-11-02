@@ -83,6 +83,7 @@ export default function PointsTablePage() {
             const { data: pointsData, error } = await supabaseBrowser
                 .from("points_table")
                 .select("*")
+                .order("total", { ascending: false })
                 .order("group_no", { ascending: true });
 
             if (error) throw error;
@@ -96,15 +97,20 @@ export default function PointsTablePage() {
         }
     }
 
-    const getRankBadge = (index: number) => {
+    // Calculate rank based on position (already sorted by total)
+    const getRank = (index: number): number => {
+        return index + 1;
+    };
+
+    const getRankBadge = (rank: number) => {
         const badges = [
             { icon: Trophy, color: "bg-yellow-500 text-white", label: "1st" },
             { icon: Award, color: "bg-gray-400 text-white", label: "2nd" },
             { icon: Award, color: "bg-amber-700 text-white", label: "3rd" },
         ];
 
-        if (index < 3) {
-            const badge = badges[index];
+        if (rank <= 3) {
+            const badge = badges[rank - 1];
             const Icon = badge.icon;
             return (
                 <Badge className={`${badge.color} gap-1`}>
@@ -113,7 +119,7 @@ export default function PointsTablePage() {
                 </Badge>
             );
         }
-        return <span className="text-muted-foreground">#{index + 1}</span>;
+        return <span className="text-muted-foreground">#{rank}</span>;
     };
 
     if (loading) {
@@ -189,34 +195,37 @@ export default function PointsTablePage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {data.map((row, index) => (
-                                        <TableRow
-                                            key={row.id}
-                                            className={`${index < 3 ? "bg-muted/30" : ""
-                                                } hover:bg-muted/50 transition-colors`}
-                                        >
-                                            <TableCell className="text-center font-medium sticky left-0 bg-background z-10">
-                                                {getRankBadge(index)}
-                                            </TableCell>
-                                            <TableCell className="font-semibold sticky left-20 bg-background z-10">
-                                                {row.group_no}
-                                            </TableCell>
-                                            <TableCell className="font-medium sticky left-36 bg-background z-10">
-                                                {row.church_name}
-                                            </TableCell>
-                                            {roundNames.map((round) => (
-                                                <TableCell
-                                                    key={round.key}
-                                                    className={`text-center ${round.color} font-medium`}
-                                                >
-                                                    {row[round.key as keyof PointsData]}
+                                    {data.map((row, index) => {
+                                        const rank = getRank(index);
+                                        return (
+                                            <TableRow
+                                                key={row.id}
+                                                className={`${rank <= 3 ? "bg-muted/30" : ""
+                                                    } hover:bg-muted/50 transition-colors`}
+                                            >
+                                                <TableCell className="text-center font-medium sticky left-0 bg-background z-10">
+                                                    {getRankBadge(rank)}
                                                 </TableCell>
-                                            ))}
-                                            <TableCell className="text-center font-bold text-lg bg-primary/10 sticky right-0 z-10">
-                                                {row.total}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                                <TableCell className="font-semibold sticky left-20 bg-background z-10">
+                                                    {row.group_no}
+                                                </TableCell>
+                                                <TableCell className="font-medium sticky left-36 bg-background z-10">
+                                                    {row.church_name}
+                                                </TableCell>
+                                                {roundNames.map((round) => (
+                                                    <TableCell
+                                                        key={round.key}
+                                                        className={`text-center ${round.color} font-medium`}
+                                                    >
+                                                        {row[round.key as keyof PointsData]}
+                                                    </TableCell>
+                                                ))}
+                                                <TableCell className="text-center font-bold text-lg bg-primary/10 sticky right-0 z-10">
+                                                    {row.total}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
                                 </TableBody>
                             </Table>
                         </div>
@@ -225,46 +234,49 @@ export default function PointsTablePage() {
 
                 {/* Mobile View */}
                 <div className="md:hidden space-y-4">
-                    {data.map((row, index) => (
-                        <Card
-                            key={row.id}
-                            className={`${index < 3 ? "border-primary shadow-lg" : "shadow-md"
-                                } overflow-hidden`}
-                        >
-                            <CardHeader className="pb-3 bg-muted/30">
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            {getRankBadge(index)}
-                                            <Badge variant="outline">Group {row.group_no}</Badge>
-                                        </div>
-                                        <CardTitle className="text-xl">{row.church_name}</CardTitle>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="text-sm text-muted-foreground">Total Points</div>
-                                        <div className="text-3xl font-bold text-primary">{row.total}</div>
-                                    </div>
-                                </div>
-                            </CardHeader>
-                            <CardContent className="pt-4">
-                                <div className="grid grid-cols-2 gap-3">
-                                    {roundNames.map((round) => (
-                                        <div
-                                            key={round.key}
-                                            className={`${round.color} rounded-lg p-3 text-center`}
-                                        >
-                                            <div className="text-xs font-medium text-muted-foreground mb-1">
-                                                {round.label}
+                    {data.map((row, index) => {
+                        const rank = getRank(index);
+                        return (
+                            <Card
+                                key={row.id}
+                                className={`${rank <= 3 ? "border-primary shadow-lg" : "shadow-md"
+                                    } overflow-hidden`}
+                            >
+                                <CardHeader className="pb-3 bg-muted/30">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                {getRankBadge(rank)}
+                                                <Badge variant="outline">Group {row.group_no}</Badge>
                                             </div>
-                                            <div className="text-lg font-bold">
-                                                {row[round.key as keyof PointsData]}
-                                            </div>
+                                            <CardTitle className="text-xl">{row.church_name}</CardTitle>
                                         </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
+                                        <div className="text-right">
+                                            <div className="text-sm text-muted-foreground">Total Points</div>
+                                            <div className="text-3xl font-bold text-primary">{row.total}</div>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="pt-4">
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {roundNames.map((round) => (
+                                            <div
+                                                key={round.key}
+                                                className={`${round.color} rounded-lg p-3 text-center`}
+                                            >
+                                                <div className="text-xs font-medium text-muted-foreground mb-1">
+                                                    {round.label}
+                                                </div>
+                                                <div className="text-lg font-bold">
+                                                    {row[round.key as keyof PointsData]}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        );
+                    })}
                 </div>
 
                 {/* Footer Stats */}

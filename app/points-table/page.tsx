@@ -28,7 +28,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Trophy, TrendingUp, Award, Clock, AlertCircle } from "lucide-react";
+import { Trophy, TrendingUp, Award } from "lucide-react";
 
 type PointsData = {
     id: string;
@@ -168,33 +168,8 @@ export default function PointsTablePage() {
                     </div>
                 </div>
 
-                {/* Paused Status Banner */}
-                <Card className="mb-6 border-orange-500/50 bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 dark:from-orange-950/20 dark:via-amber-950/20 dark:to-yellow-950/20 shadow-lg">
-                    <CardContent className="py-6">
-                        <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left">
-                            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-orange-500/10 dark:bg-orange-500/20 ring-4 ring-orange-500/20 dark:ring-orange-500/30">
-                                <Clock className="w-8 h-8 text-orange-600 dark:text-orange-400 animate-pulse" />
-                            </div>
-                            <div className="flex-1">
-                                <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-                                    <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                                    <h3 className="text-xl font-bold text-orange-900 dark:text-orange-200">
-                                        Competition Temporarily Paused
-                                    </h3>
-                                </div>
-                                <p className="text-orange-800 dark:text-orange-300 text-base">
-                                    The quiz competition is currently on hold. Scores will be updated soon. Thank you for your patience!
-                                </p>
-                            </div>
-                            <Badge className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 text-sm font-semibold shadow-md">
-                                Updates Coming Soon
-                            </Badge>
-                        </div>
-                    </CardContent>
-                </Card>
-
                 {/* Desktop/Tablet View */}
-                {/* <Card className="hidden md:block shadow-lg">
+                <Card className="hidden md:block shadow-lg">
                     <CardContent className="p-0">
                         <div className="overflow-x-auto">
                             <Table>
@@ -258,7 +233,7 @@ export default function PointsTablePage() {
                 </Card>
 
                 {/* Mobile View */}
-                {/* <div className="md:hidden space-y-4">
+                <div className="md:hidden space-y-4">
                     {data.map((row, index) => {
                         const rank = getRank(index);
                         return (
@@ -302,7 +277,7 @@ export default function PointsTablePage() {
                             </Card>
                         );
                     })}
-                </div> */}
+                </div>
 
                 {/* Footer Stats */}
                 {/* {data.length > 0 && (

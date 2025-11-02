@@ -52,20 +52,20 @@ type PointsData = {
 };
 
 const roundNames = [
-    { key: "fill_blanks_a", label: "Fill Blanks A", color: "bg-blue-100 dark:bg-blue-900" },
-    { key: "fill_blanks_b", label: "Fill Blanks B", color: "bg-blue-200 dark:bg-blue-800" },
-    { key: "one_word_a", label: "One Word A", color: "bg-green-100 dark:bg-green-900" },
-    { key: "one_word_b", label: "One Word B", color: "bg-green-200 dark:bg-green-800" },
-    { key: "true_false_a", label: "True/False A", color: "bg-purple-100 dark:bg-purple-900" },
-    { key: "true_false_b", label: "True/False B", color: "bg-purple-200 dark:bg-purple-800" },
-    { key: "who_said_to_whom", label: "Who Said", color: "bg-pink-100 dark:bg-pink-900" },
-    { key: "match_column", label: "Match Column", color: "bg-orange-100 dark:bg-orange-900" },
-    { key: "crossword", label: "Crossword", color: "bg-yellow-100 dark:bg-yellow-900" },
-    { key: "visual_round", label: "Visual Round", color: "bg-indigo-100 dark:bg-indigo-900" },
-    { key: "rapid_fire", label: "Rapid Fire", color: "bg-red-100 dark:bg-red-900" },
-    { key: "diocese_round_a", label: "Diocese A", color: "bg-teal-100 dark:bg-teal-900" },
-    { key: "diocese_round_b", label: "Diocese B", color: "bg-teal-200 dark:bg-teal-800" },
-    { key: "complete_verse", label: "Complete Verse", color: "bg-cyan-100 dark:bg-cyan-900" },
+    { key: "fill_blanks_a", label: "Hidden Manna A", color: "bg-blue-100 dark:bg-blue-900" },
+    { key: "fill_blanks_b", label: "Hidden Manna B", color: "bg-blue-200 dark:bg-blue-800" },
+    { key: "one_word_a", label: "The Rhema A", color: "bg-green-100 dark:bg-green-900" },
+    { key: "one_word_b", label: "The Rhema B", color: "bg-green-200 dark:bg-green-800" },
+    { key: "true_false_a", label: "Prophet or Pretender A", color: "bg-purple-100 dark:bg-purple-900" },
+    { key: "true_false_b", label: "Prophet or Pretender B", color: "bg-purple-200 dark:bg-purple-800" },
+    { key: "who_said_to_whom", label: "Knock Knock — Who Said That?", color: "bg-pink-100 dark:bg-pink-900" },
+    { key: "match_column", label: "The Shepherd’s Order", color: "bg-orange-100 dark:bg-orange-900" },
+    { key: "crossword", label: "Tower of Babel", color: "bg-yellow-100 dark:bg-yellow-900" },
+    { key: "visual_round", label: "Visions & Wonders", color: "bg-indigo-100 dark:bg-indigo-900" },
+    { key: "rapid_fire", label: "Race of Faith", color: "bg-red-100 dark:bg-red-900" },
+    { key: "diocese_round_a", label: "Body of Christ A", color: "bg-teal-100 dark:bg-teal-900" },
+    { key: "diocese_round_b", label: "Body of Christ B", color: "bg-teal-200 dark:bg-teal-800" },
+    { key: "complete_verse", label: "Word Made Flesh", color: "bg-cyan-100 dark:bg-cyan-900" },
 ];
 
 export default function PointsTablePage() {
@@ -83,7 +83,7 @@ export default function PointsTablePage() {
             const { data: pointsData, error } = await supabaseBrowser
                 .from("points_table")
                 .select("*")
-                .order("total", { ascending: false });
+                .order("group_no", { ascending: true });
 
             if (error) throw error;
 

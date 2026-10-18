@@ -7,9 +7,7 @@ const nextConfig = {
     return config;
   },
   serverExternalPackages: ['pdfkit'],
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  turbopack: {},
   typescript: {
     ignoreBuildErrors: true,
   },

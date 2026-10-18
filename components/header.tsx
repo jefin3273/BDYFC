@@ -82,6 +82,10 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  if (pathname === "/points-table") {
+    return null;
+  }
+
   // Get role configuration if available
   // const roleData =
   //   userRole && roleConfig[userRole as RoleType]
